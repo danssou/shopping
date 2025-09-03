@@ -6,6 +6,15 @@ export type Product = {
   description: string;
   price: number;
   image: string;
+  brand: string;
+  category: string;
+  stock: number;
+  color: string;
+  size: string;
+  isFeatured: boolean;
+  rating: number;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 interface ProductState {

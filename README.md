@@ -1,53 +1,104 @@
-# Shopping App
+# Nike Shopping App
 
-A modern e-commerce demo built with Next.js, TypeScript, TailwindCSS, Drizzle ORM, Neon PostgreSQL, Zustand, and Better Auth.
+A Next.js e-commerce application showcasing Nike products with a modern tech stack.
 
-## Features
+## 🛠️ Tech Stack
 
-- Next.js 14+ with App Router
-- TypeScript
-- TailwindCSS
-- Drizzle ORM (PostgreSQL)
-- Neon cloud database
-- Zustand state management
-- Better Auth authentication
-- Products table with rich schema
-- Sample Nike product seeding
-- Protected routes via middleware
+- **Framework**: Next.js 15 with TypeScript
+- **Styling**: TailwindCSS with plugins
+- **Database**: Neon PostgreSQL
+- **ORM**: Drizzle ORM
+- **State Management**: Zustand
+- **Authentication**: Better Auth (configured but not implemented yet)
+- **Code Quality**: ESLint with TypeScript support
 
-## Getting Started
+## 📁 Project Structure
 
-1. **Install dependencies:**
+```
+shopping/
+├── app/                    # Next.js App Router
+│   ├── lib/
+│   │   ├── auth.ts        # Better Auth configuration
+│   │   ├── getProducts.ts # Database queries
+│   │   └── store.ts       # Zustand store & types
+│   ├── layout.tsx         # Root layout
+│   └── page.tsx           # Homepage with product listing
+├── drizzle/               # Database setup
+│   ├── db.ts             # Database connection
+│   ├── schema.ts         # Product table schema
+│   ├── seed.ts           # Sample Nike products
+│   └── migrations/       # Database migrations
+├── public/               # Static assets
+└── configuration files...
+```
 
+## 🚀 Getting Started
+
+1. **Install dependencies**:
    ```bash
    npm install
    ```
 
-2. **Set up environment variables:**
-
+2. **Set up environment variables**:
    Create a `.env.local` file:
-
    ```env
-   DATABASE_URL=your_neon_postgres_connection_string
-   AUTH_SECRET=your_auth_secret
-   NEXT_PUBLIC_SITE_URL=http://localhost:3000
+   DATABASE_URL="your-neon-postgresql-connection-string"
+   AUTH_SECRET="your-secret-key"
    ```
 
-3. **Run database seed:**
-
+3. **Set up the database**:
    ```bash
-   npx tsx drizzle/seed.ts
+   # Generate and apply migrations
+   npm run drizzle:generate
+   npm run drizzle:migrate
+   
+   # Seed with sample Nike products
+   npm run db:seed
    ```
 
-4. **Start the development server:**
-
+4. **Start development server**:
    ```bash
    npm run dev
    ```
 
-5. **Open [http://localhost:3000](http://localhost:3000) in your browser.**
+5. **View the app**: Open [http://localhost:3000](http://localhost:3000)
 
-## Authentication
+## 📊 Database Schema
+
+The `products` table includes:
+- Basic info: name, description, price, image
+- Product details: brand, category, stock, color, size
+- Features: rating, isFeatured flag
+- Timestamps: createdAt, updatedAt
+
+## 🎨 Features
+
+- ✅ Responsive product grid layout
+- ✅ Product cards with images, details, and pricing
+- ✅ Database integration with Drizzle ORM
+- ✅ TypeScript throughout
+- ✅ Seeded with sample Nike products
+- ✅ Modern styling with TailwindCSS
+- ⏳ Authentication ready (Better Auth configured)
+
+## 📝 Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run db:seed` - Seed database with products
+- `npm run db:test` - Test database connection
+- `npm run drizzle:studio` - Open Drizzle Studio
+
+## 📋 Next Steps
+
+1. Add user authentication pages
+2. Implement shopping cart functionality
+3. Add product detail pages
+4. Implement checkout process
+5. Add real Nike product images
+
+This is a clean, production-ready foundation for an e-commerce app!
 
 - Uses Better Auth for login and protected routes.
 - Configure providers in `app/lib/auth.ts`.
