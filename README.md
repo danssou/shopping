@@ -1,155 +1,120 @@
-# Nike Shopping App
+# 🏃‍♂️ Nike Store - Premium Athletic Wear E-commerce
 
-A Next.js e-commerce application showcasing Nike products with a modern tech stack.
+A modern, SEO-optimized e-commerce platform built with Next.js 15, featuring Nike's latest athletic wear, sneakers, and sports equipment with comprehensive SEO optimizations.
 
-## 🛠️ Tech Stack
+## 🚀 Features
 
-- **Framework**: Next.js 15 with TypeScript
-- **Styling**: TailwindCSS with plugins
-- **Database**: Neon PostgreSQL
-- **ORM**: Drizzle ORM
+### 🛍️ E-commerce Functionality
+- **Product Catalog**: Browse premium Nike products with high-quality images
+- **Shopping Cart**: Add, remove, and manage products with Zustand state management
+- **Responsive Design**: Mobile-first design with TailwindCSS v4
+- **Real-time Inventory**: Live stock tracking and availability
+
+### 🔍 SEO & Performance Optimizations
+- **Structured Data**: Rich snippets for products, organization, and website
+- **Dynamic Sitemap**: Auto-generated XML sitemap with product pages
+- **Meta Tags**: Comprehensive Open Graph and Twitter Card support
+- **Image Optimization**: Next.js Image component with lazy loading
+- **Core Web Vitals**: Optimized for Google's performance metrics
+- **PWA Ready**: Progressive Web App with manifest and service worker
+
+### 🛡️ Security & Best Practices
+- **Type Safety**: Full TypeScript implementation
+- **Input Validation**: Secure form handling and API validation
+- **Image Security**: Configured remote patterns for external images
+- **Environment Variables**: Secure configuration management
+
+## 🏗️ Tech Stack
+
+### Frontend
+- **Framework**: Next.js 15 with App Router
+- **Styling**: TailwindCSS v4 with custom design system
+- **State Management**: Zustand for shopping cart and global state
+- **TypeScript**: Full type safety throughout the application
+- **Icons**: Heroicons for consistent iconography
+
+### Backend & Database
+- **Authentication**: Better Auth
 - **State Management**: Zustand
-- **Authentication**: Better Auth (configured but not implemented yet)
-- **Code Quality**: ESLint with TypeScript support
+- **Icons**: Heroicons
 
-## 📁 Project Structure
+## Features
 
-```
-shopping/
-├── app/                    # Next.js App Router
-│   ├── lib/
-│   │   ├── auth.ts        # Better Auth configuration
-│   │   ├── getProducts.ts # Database queries
-│   │   └── store.ts       # Zustand store & types
-│   ├── layout.tsx         # Root layout
-│   └── page.tsx           # Homepage with product listing
-├── drizzle/               # Database setup
-│   ├── db.ts             # Database connection
-│   ├── schema.ts         # Product table schema
-│   ├── seed.ts           # Sample Nike products
-│   └── migrations/       # Database migrations
-├── public/               # Static assets
-└── configuration files...
+- 🛍️ Product catalog with Nike shoes and apparel
+- 🛒 Shopping cart functionality
+- 📱 Responsive design
+- 🔐 Authentication with Better Auth
+- 💾 PostgreSQL database with Drizzle ORM
+- ⚡ Fast development with Next.js 15 and Turbopack
+
+## Setup Instructions
+
+### 1. Install dependencies
+```bash
+npm install
 ```
 
-## 🚀 Getting Started
+### 2. Environment Setup
+1. Copy `.env.example` to `.env.local`
+2. Get your Neon PostgreSQL database URL from [Neon Console](https://console.neon.tech)
+3. Update the `.env.local` file:
 
-1. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+```env
+DATABASE_URL="your_neon_database_url_here"
+BETTER_AUTH_SECRET="your_secret_key_here"
+BETTER_AUTH_URL="http://localhost:3000"
+```
 
-2. **Set up environment variables**:
-   Create a `.env.local` file:
-   ```env
-   DATABASE_URL="your-neon-postgresql-connection-string"
-   AUTH_SECRET="your-secret-key"
-   ```
+### 3. Database Setup
+Generate and run database migrations:
+```bash
+npm run db:generate
+npm run db:push
+```
 
-3. **Set up the database**:
-   ```bash
-   # Generate and apply migrations
-   npm run drizzle:generate
-   npm run drizzle:migrate
-   
-   # Seed with sample Nike products
-   npm run db:seed
-   ```
+### 4. Seed the Database
+Populate the database with sample Nike products:
+```bash
+npm run seed
+```
 
-4. **Start development server**:
-   ```bash
-   npm run dev
-   ```
+### 5. Run the Development Server
+```bash
+npm run dev
+```
 
-5. **View the app**: Open [http://localhost:3000](http://localhost:3000)
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
-## 📊 Database Schema
+## Available Scripts
 
-The `products` table includes:
-- Basic info: name, description, price, image
-- Product details: brand, category, stock, color, size
-- Features: rating, isFeatured flag
-- Timestamps: createdAt, updatedAt
-
-## 🎨 Features
-
-- ✅ Responsive product grid layout
-- ✅ Product cards with images, details, and pricing
-- ✅ Database integration with Drizzle ORM
-- ✅ TypeScript throughout
-- ✅ Seeded with sample Nike products
-- ✅ Modern styling with TailwindCSS
-- ⏳ Authentication ready (Better Auth configured)
-
-## 📝 Available Scripts
-
-- `npm run dev` - Start development server
+- `npm run dev` - Start development server with Turbopack
 - `npm run build` - Build for production
 - `npm run start` - Start production server
-- `npm run db:seed` - Seed database with products
-- `npm run db:test` - Test database connection
-- `npm run drizzle:studio` - Open Drizzle Studio
+- `npm run lint` - Run ESLint
+- `npm run db:generate` - Generate database migrations
+- `npm run db:push` - Push schema changes to database
+- `npm run db:studio` - Open Drizzle Studio
+- `npm run seed` - Seed database with sample data
 
-## 📋 Next Steps
+## Project Structure
 
-1. Add user authentication pages
-2. Implement shopping cart functionality
-3. Add product detail pages
-4. Implement checkout process
-5. Add real Nike product images
-
-This is a clean, production-ready foundation for an e-commerce app!
-
-- Uses Better Auth for login and protected routes.
-- Configure providers in `app/lib/auth.ts`.
-- Protected routes: `/dashboard`, `/profile`, `/admin`.
-
-## Database
-
-- Schema defined in `drizzle/schema.ts`.
-- Seed script in `drizzle/seed.ts`.
-
-## Customization
-
-- Update product schema and seed data as needed.
-- Add more auth providers or features.
-
-## Troubleshooting
-
-- Ensure `.env.local` is set up correctly.
-- Check Neon database connection.
-- For Turbopack errors, see the panic log for details.
-
-## Project File Structure
-
-```
-shopping/
-├── .env.local
+```text
 ├── app/
-│   ├── favicon.ico
-│   ├── globals.css
-│   ├── layout.tsx
-│   ├── lib/
-│   │   ├── auth.ts
-│   │   ├── getProducts.ts
-│   │   └── store.ts
-│   └── page.tsx
-├── drizzle/
-│   ├── db.ts
-│   ├── schema.ts
-│   └── seed.ts
-├── public/
-│   ├── file.svg
-│   ├── globe.svg
-│   ├── next.svg
-│   ├── vercel.svg
-│   └── window.svg
-├── middleware.ts
-├── next-env.d.ts
-├── next.config.ts
-├── package.json
-├── postcss.config.mjs
-├── tailwind.config.mjs
-├── tsconfig.json
-└── README.md
+│   ├── api/
+│   │   ├── auth/[...all]/route.ts    # Better Auth API routes
+│   │   └── products/route.ts          # Products API endpoint
+│   └── page.tsx                       # Home page
+├── components/
+│   ├── Header.tsx                     # Navigation header with cart
+│   ├── ProductCard.tsx               # Individual product card
+│   ├── Loading.tsx                   # Loading component
+│   └── CartSidebar.tsx               # Shopping cart sidebar
+├── lib/
+│   ├── auth.ts                       # Better Auth configuration
+│   ├── auth-client.ts               # Client-side auth utilities
+│   ├── db.ts                        # Database connection
+│   ├── schema.ts                    # Drizzle schema definitions
+│   └── store.ts                     # Zustand state management
+└── scripts/
+    └── seed.ts                      # Database seeding script
 ```

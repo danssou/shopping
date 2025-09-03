@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Allow specific search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Disallow admin areas if any
+User-agent: *
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /scripts/
+
+# Sitemap location
+Sitemap: https://nike-store.vercel.app/sitemap.xml

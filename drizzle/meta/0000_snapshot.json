@@ -1,5 +1,5 @@
 {
-  "id": "ed4fa426-a62a-4d2a-9369-9d3508b0a2e7",
+  "id": "7b356004-0e8a-47bd-9c7a-539ae5d48ff0",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -10,9 +10,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "name": {
           "name": "name",
@@ -22,84 +23,54 @@
         },
         "description": {
           "name": "description",
-          "type": "varchar(1024)",
+          "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "price": {
           "name": "price",
-          "type": "integer",
+          "type": "numeric(10, 2)",
           "primaryKey": false,
           "notNull": true
         },
-        "image": {
-          "name": "image",
-          "type": "varchar(255)",
+        "image_url": {
+          "name": "image_url",
+          "type": "varchar(500)",
           "primaryKey": false,
-          "notNull": true
-        },
-        "brand": {
-          "name": "brand",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'Nike'"
+          "notNull": false
         },
         "category": {
           "name": "category",
           "type": "varchar(100)",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'Shoes'"
+          "notNull": false
+        },
+        "brand": {
+          "name": "brand",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
         },
         "stock": {
           "name": "stock",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true,
-          "default": 100
-        },
-        "color": {
-          "name": "color",
-          "type": "varchar(50)",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'Black'"
-        },
-        "size": {
-          "name": "size",
-          "type": "varchar(20)",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'M'"
-        },
-        "is_featured": {
-          "name": "is_featured",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "rating": {
-          "name": "rating",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 5
+          "notNull": false,
+          "default": 0
         },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": false,
+          "default": "CURRENT_TIMESTAMP"
         },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": false,
+          "default": "CURRENT_TIMESTAMP"
         }
       },
       "indexes": {},
