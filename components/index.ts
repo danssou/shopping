@@ -10,5 +10,10 @@ export * from './cart';
 // UI Components
 export * from './ui';
 
-// Providers
+// Standalone Components
+export { Navbar } from './Navbar';
+export { Card } from './product/Card';
+export { Footer } from './Footer';
+
+// Theme Provider
 export { ThemeProvider } from './ThemeProvider';

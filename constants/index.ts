@@ -1,12 +1,12 @@
 export const SITE_CONFIG = {
-  name: 'Nike Store',
-  description: 'Premium athletic wear and sneakers store featuring official Nike products',
-  url: 'https://nike-store.vercel.app',
-  title: 'Nike Store - Premium Athletic Wear & Sneakers',
+  name: 'CODALWARE Store',
+  description: 'Premium athletic wear and sneakers store featuring quality products and innovative design',
+  url: 'https://codalware-store.vercel.app',
+  title: 'CODALWARE Store - Premium Athletic Wear & Sneakers',
   keywords: [
-    'Nike', 'sneakers', 'athletic wear', 'Air Max', 'Air Force 1', 
-    'Dri-FIT', 'sports equipment', 'running shoes', 'basketball shoes',
-    'Nike apparel', 'sportswear', 'Nike store', 'official Nike'
+    'CODALWARE', 'sneakers', 'athletic wear', 'shoes', 'comfort shoes', 
+    'performance', 'sports equipment', 'running shoes', 'lifestyle shoes',
+    'premium footwear', 'sportswear', 'CODALWARE store', 'quality products'
   ],
 } as const;
 
@@ -26,3 +26,6 @@ export const THEME_MODES = {
   DARK: 'dark',
   SYSTEM: 'system',
 } as const;
+
+// Export products
+export * from './products';

@@ -33,8 +33,8 @@ const config: Config = {
         }
       },
       fontFamily: {
-        sans: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
-        mono: ['var(--font-geist-mono)', 'Courier New', 'monospace'],
+        sans: ['var(--font-jost-sans)', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-jost-mono)', 'Courier New', 'monospace'],
       },
     },
   },
