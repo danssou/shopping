@@ -1,9 +1,13 @@
 'use client';
 
 import Image from 'next/image';
+import { useState } from 'react';
 import { HeartIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
-import { useState } from 'react';
+
+// ========================================
+// TYPES & INTERFACES
+// ========================================
 
 interface CardProps {
   id: string;
@@ -20,7 +24,9 @@ interface CardProps {
   className?: string;
 }
 
-export function Card({
+
+
+export const Card = ({
   id,
   title,
   category = "Men's Shoes",
@@ -33,9 +39,17 @@ export function Card({
   onAddToCart,
   onToggleWishlist,
   className = '',
-}: CardProps) {
+}: CardProps) => {
+  // ========================================
+  // STATE MANAGEMENT
+  // ========================================
+  
   const [isHovered, setIsHovered] = useState(false);
   const [wishlistState, setWishlistState] = useState(isWishlisted);
+
+  // ========================================
+  // EVENT HANDLERS
+  // ========================================
 
   const handleWishlistToggle = () => {
     setWishlistState(!wishlistState);
@@ -46,90 +60,130 @@ export function Card({
     onAddToCart?.(id);
   };
 
+  const handleMouseEnter = () => setIsHovered(true);
+  const handleMouseLeave = () => setIsHovered(false);
+
+  // ========================================
+  // RENDER HELPERS
+  // ========================================
+
+  const renderBestSellerBadge = () => {
+    if (!isBestSeller) return null;
+    
+    return (
+      <div className="absolute top-4 left-4 z-10">
+        <span className="bg-orange text-light-100 text-caption font-medium px-3 py-1 rounded-full">
+          Best Seller
+        </span>
+      </div>
+    );
+  };
+
+  const renderWishlistButton = () => (
+    <button
+      onClick={handleWishlistToggle}
+      className="absolute top-4 right-4 z-10 p-2 bg-light-100 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-light-200"
+      aria-label="Add to wishlist"
+    >
+      {wishlistState ? (
+        <HeartSolidIcon className="h-5 w-5 text-red" />
+      ) : (
+        <HeartIcon className="h-5 w-5 text-dark-700" />
+      )}
+    </button>
+  );
+
+  const renderQuickAddButton = () => (
+    <div 
+      className={`absolute inset-x-4 bottom-4 transition-all duration-300 ${
+        isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+      }`}
+    >
+      <button
+        onClick={handleAddToCart}
+        className="w-full bg-dark-900 text-light-100 py-3 px-4 rounded-full font-medium hover:bg-dark-700 transition-colors duration-200 flex items-center justify-center space-x-2"
+      >
+        <ShoppingBagIcon className="h-5 w-5" />
+        <span>Add to Cart</span>
+      </button>
+    </div>
+  );
+
+  const renderProductImage = () => (
+    <div className="relative aspect-square overflow-hidden bg-light-200">
+      <Image
+        src={image}
+        alt={title}
+        fill
+        className="object-cover transition-transform duration-300 group-hover:scale-105"
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+      />
+      {renderQuickAddButton()}
+    </div>
+  );
+
+  const renderColorsInfo = () => {
+    if (!colors) return null;
+    
+    return (
+      <p className="text-dark-500 text-caption mb-3">
+        {colors} Colour{colors > 1 ? 's' : ''}
+      </p>
+    );
+  };
+
+  const renderPricing = () => (
+    <div className="flex items-center space-x-2">
+      <span className="text-dark-900 text-body-medium font-medium">
+        {price}
+      </span>
+      {originalPrice && (
+        <span className="text-dark-500 text-body line-through">
+          {originalPrice}
+        </span>
+      )}
+    </div>
+  );
+
+  const renderProductInfo = () => (
+    <div className="p-4">
+      {/* Title & Category */}
+      <div className="mb-2">
+        <h3 className="text-heading-3 font-medium text-dark-900 line-clamp-2 mb-1">
+          {title}
+        </h3>
+        <p className="text-dark-500 text-body">
+          {category}
+        </p>
+      </div>
+
+      {/* Colors Available */}
+      {renderColorsInfo()}
+
+      {/* Pricing */}
+      {renderPricing()}
+    </div>
+  );
+
+  // ========================================
+  // MAIN RENDER
+  // ========================================
+
   return (
     <div 
       className={`group relative bg-light-100 overflow-hidden transition-all duration-300 ${className}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-      {/* Best Seller Badge */}
-      {isBestSeller && (
-        <div className="absolute top-4 left-4 z-10">
-          <span className="bg-orange text-light-100 text-caption font-medium px-3 py-1 rounded-full">
-            Best Seller
-          </span>
-        </div>
-      )}
+      {/* Overlay Elements */}
+      {renderBestSellerBadge()}
+      {renderWishlistButton()}
 
-      {/* Wishlist Button */}
-      <button
-        onClick={handleWishlistToggle}
-        className="absolute top-4 right-4 z-10 p-2 bg-light-100 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-light-200"
-        aria-label="Add to wishlist"
-      >
-        {wishlistState ? (
-          <HeartSolidIcon className="h-5 w-5 text-red" />
-        ) : (
-          <HeartIcon className="h-5 w-5 text-dark-700" />
-        )}
-      </button>
-
-      {/* Product Image */}
-      <div className="relative aspect-square overflow-hidden bg-light-200">
-        <Image
-          src={image}
-          alt={title}
-          fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-        />
-        
-        {/* Quick Add Button - Appears on Hover */}
-        <div className={`absolute inset-x-4 bottom-4 transition-all duration-300 ${
-          isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-        }`}>
-          <button
-            onClick={handleAddToCart}
-            className="w-full bg-dark-900 text-light-100 py-3 px-4 rounded-full font-medium hover:bg-dark-700 transition-colors duration-200 flex items-center justify-center space-x-2"
-          >
-            <ShoppingBagIcon className="h-5 w-5" />
-            <span>Add to Cart</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Product Info */}
-      <div className="p-4">
-        <div className="mb-2">
-          <h3 className="text-heading-3 font-medium text-dark-900 line-clamp-2 mb-1">
-            {title}
-          </h3>
-          <p className="text-dark-500 text-body">
-            {category}
-          </p>
-        </div>
-
-        {/* Colors Available */}
-        {colors && (
-          <p className="text-dark-500 text-caption mb-3">
-            {colors} Colour{colors > 1 ? 's' : ''}
-          </p>
-        )}
-
-        {/* Price */}
-        <div className="flex items-center space-x-2">
-          <span className="text-dark-900 text-body-medium font-medium">
-            {price}
-          </span>
-          {originalPrice && (
-            <span className="text-dark-500 text-body line-through">
-              {originalPrice}
-            </span>
-          )}
-        </div>
-      </div>
+      {/* Main Content */}
+      {renderProductImage()}
+      {renderProductInfo()}
     </div>
   );
-}
+};
 
 export default Card;

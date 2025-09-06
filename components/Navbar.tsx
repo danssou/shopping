@@ -9,7 +9,7 @@ interface NavbarProps {
   className?: string;
 }
 
-export function Navbar({ className = '' }: NavbarProps) {
+export const Navbar = ({ className = '' }: NavbarProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const cart = useStore((state) => state.cart);
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -125,6 +125,6 @@ export function Navbar({ className = '' }: NavbarProps) {
       </div>
     </nav>
   );
-}
+};
 
 export default Navbar;

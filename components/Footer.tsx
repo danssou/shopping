@@ -13,7 +13,7 @@ interface FooterSection {
   links: FooterLink[];
 }
 
-export function Footer() {
+export const Footer = () => {
   const footerSections: FooterSection[] = [
     {
       title: 'Featured',
@@ -180,6 +180,6 @@ export function Footer() {
       </div>
     </footer>
   );
-}
+};
 
 export default Footer;

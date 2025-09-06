@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Jost} from "next/font/google";
-import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 import { Footer, Navbar } from "@/components";
 
@@ -69,11 +68,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+const RootLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) => {
   return (
     <html lang="en" dir="ltr" suppressHydrationWarning>
       <head>
@@ -111,12 +110,12 @@ export default function RootLayout({
       <body
         className={`${jost.className} antialiased`}
       >
-        <ThemeProvider>
-          <Navbar />
-          {children}
-          <Footer />
-        </ThemeProvider>
+        <Navbar />
+        {children}
+        <Footer />
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

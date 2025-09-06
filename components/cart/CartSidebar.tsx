@@ -8,7 +8,7 @@ interface CartSidebarProps {
   onClose: () => void;
 }
 
-export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
+const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
   const { cart, removeFromCart, updateCartQuantity, clearCart } = useStore();
   
   const total = cart.reduce((sum, item) => sum + (parseFloat(item.price) * item.quantity), 0);
@@ -88,4 +88,6 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
       </div>
     </div>
   );
-}
+};
+
+export default CartSidebar;

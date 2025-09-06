@@ -20,7 +20,7 @@ interface Product {
   updatedAt: Date | null;
 }
 
-export default function Home() {
+const Home = () => {
   const { products, loading, error, setProducts, setLoading, setError } = useStore();
 
   const fetchProducts = useCallback(async () => {
@@ -70,7 +70,7 @@ export default function Home() {
   }
 
   return (
-    <div className="font-jost min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    <div className="font-jost min-h-screen bg-gray-50">
       
       {/* Hero Section with Local Images */}
       <section className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-black">
@@ -114,8 +114,18 @@ export default function Home() {
       {/* Featured Products Section using new Card component */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="mb-12 text-center">
-          <h2 className="font-bold text-heading-1 text-gray-900 dark:text-white mb-4">Featured Products</h2>
-          <p className="text-gray-600 dark:text-gray-300 text-lg">Discover our latest collection of premium products</p>
+          <h2 
+            className="text-dark-900 font-bold mb-4 text-center"
+            style={{ fontSize: 'var(--text-heading-2)', lineHeight: 'var(--text-heading-2--line-height)' }}
+          >
+            Featured Products
+          </h2>
+          <p 
+            className="text-dark-600 text-center max-w-2xl mx-auto"
+            style={{ fontSize: 'var(--text-body)', lineHeight: 'var(--text-body--line-height)' }}
+          >
+            Discover our latest collection of premium products
+          </p>
         </div>
 
         {/* Demo Cards using new Card component */}
@@ -142,9 +152,9 @@ export default function Home() {
         
         {error && (
           <div className="text-center py-12">
-            <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-8 max-w-md mx-auto">
-              <h3 className="text-xl font-semibold text-red-600 dark:text-red-400 mb-4">Error Loading Products</h3>
-              <p className="text-red-500 dark:text-red-300 mb-4">{error}</p>
+            <div className="bg-red-50 rounded-lg p-8 max-w-md mx-auto">
+              <h3 className="text-xl font-semibold text-red-600 mb-4">Error Loading Products</h3>
+              <p className="text-red-500 mb-4">{error}</p>
               <button
                 onClick={fetchProducts}
                 className="bg-red-600 text-white px-6 py-2 rounded-md hover:bg-red-700 transition-colors duration-200"
@@ -159,15 +169,15 @@ export default function Home() {
           <>
             {products.length === 0 ? (
               <div className="text-center py-12">
-                <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-8 max-w-md mx-auto">
-                  <h3 className="text-xl font-semibold text-gray-600 dark:text-gray-300 mb-2">No products found</h3>
-                  <p className="text-gray-500 dark:text-gray-400">Check back later for new arrivals!</p>
+                <div className="bg-gray-100 rounded-lg p-8 max-w-md mx-auto">
+                  <h3 className="text-xl font-semibold text-gray-600 mb-2">No products found</h3>
+                  <p className="text-gray-500">Check back later for new arrivals!</p>
                 </div>
               </div>
             ) : (
               <>
                 <div className="mb-8">
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">All Products</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">All Products</h3>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {products.map((product) => (
@@ -192,4 +202,6 @@ export default function Home() {
       
     </div>
   );
-    }
+};
+
+export default Home;
