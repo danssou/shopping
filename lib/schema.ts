@@ -1,6 +1,9 @@
 import { pgTable, uuid, varchar, text, decimal, timestamp, integer } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
+// Import auth schemas
+export * from './db/schema';
+
 export const products = pgTable('products', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 255 }).notNull(),

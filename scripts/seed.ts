@@ -76,7 +76,7 @@ const sampleNikeProducts = [
   }
 ];
 
-async function seedDatabase() {
+const seedDatabase = async () => {
   try {
     console.log('Seeding database with Nike products...');
     
@@ -90,7 +90,7 @@ async function seedDatabase() {
   } finally {
     process.exit(0);
   }
-}
+};
 
 // Run the seed function
 seedDatabase();

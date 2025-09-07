@@ -88,7 +88,7 @@ export const Card = ({
       {wishlistState ? (
         <HeartSolidIcon className="h-5 w-5 text-red" />
       ) : (
-        <HeartIcon className="h-5 w-5 text-dark-700" />
+        <HeartIcon className="h-5 w-5 text-gray-300" />
       )}
     </button>
   );
@@ -126,7 +126,7 @@ export const Card = ({
     if (!colors) return null;
     
     return (
-      <p className="text-dark-500 text-caption mb-3">
+      <p className="text-gray-400 text-caption mb-3">
         {colors} Colour{colors > 1 ? 's' : ''}
       </p>
     );
@@ -134,11 +134,11 @@ export const Card = ({
 
   const renderPricing = () => (
     <div className="flex items-center space-x-2">
-      <span className="text-dark-900 text-body-medium font-medium">
+      <span className="text-white text-body-medium font-medium">
         {price}
       </span>
       {originalPrice && (
-        <span className="text-dark-500 text-body line-through">
+        <span className="text-gray-400 text-body line-through">
           {originalPrice}
         </span>
       )}
@@ -149,10 +149,10 @@ export const Card = ({
     <div className="p-4">
       {/* Title & Category */}
       <div className="mb-2">
-        <h3 className="text-heading-3 font-medium text-dark-900 line-clamp-2 mb-1">
+        <h3 className="text-heading-3 font-medium text-white line-clamp-2 mb-1">
           {title}
         </h3>
-        <p className="text-dark-500 text-body">
+        <p className="text-gray-400 text-body">
           {category}
         </p>
       </div>
@@ -170,18 +170,20 @@ export const Card = ({
   // ========================================
 
   return (
-    <div 
-      className={`group relative bg-light-100 overflow-hidden transition-all duration-300 ${className}`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      {/* Overlay Elements */}
-      {renderBestSellerBadge()}
-      {renderWishlistButton()}
+    <div className="p-[2px] bg-gradient-to-b from-yellow-400 via-orange-500 to-transparent rounded-xl shadow-lg">
+      <div 
+        className={`group relative bg-slate-800 overflow-hidden transition-all duration-300 rounded-[10px] ${className}`}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        {/* Overlay Elements */}
+        {renderBestSellerBadge()}
+        {renderWishlistButton()}
 
-      {/* Main Content */}
-      {renderProductImage()}
-      {renderProductInfo()}
+        {/* Main Content */}
+        {renderProductImage()}
+        {renderProductInfo()}
+      </div>
     </div>
   );
 };

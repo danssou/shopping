@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { neon } from '@neondatabase/serverless';
 
-async function testConnection() {
+const testConnection = async () => {
   try {
     console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
     console.log('DATABASE_URL starts with:', process.env.DATABASE_URL?.substring(0, 20));
@@ -27,6 +27,6 @@ async function testConnection() {
   } catch (error) {
     console.error('❌ Database connection failed:', error);
   }
-}
+};
 
 testConnection();

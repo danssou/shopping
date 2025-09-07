@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 
-@theme inline {
+@theme {
 
   /* Dark shades */
   --color-dark-900: #111111;

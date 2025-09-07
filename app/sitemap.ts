@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { db } from '@/lib/db'
 import { products } from '@/lib/schema'
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
   const baseUrl = 'https://nike-store.vercel.app' // Update with your actual domain
   
   // Get all products for dynamic URLs
@@ -49,3 +49,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [...staticPages, ...productPages]
 }
+
+export default sitemap;

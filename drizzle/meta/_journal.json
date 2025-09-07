@@ -8,6 +8,20 @@
       "when": 1756918856302,
       "tag": "0000_friendly_deathstrike",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1757252316934,
+      "tag": "0001_chemical_gertrude_yorkes",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1757252423781,
+      "tag": "0002_dapper_eternity",
+      "breakpoints": true
     }
   ]
 }

@@ -3,7 +3,7 @@
 import { useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { useStore } from '@/lib/store';
-import { Loading } from '@/components/ui';
+import { Loading, ErrorCard } from '@/components/ui';
 import { Card } from '@/components';
 import { FEATURED_PRODUCTS } from '@/constants';
 
@@ -52,25 +52,11 @@ const Home = () => {
   }
 
   if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Error</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <button
-            onClick={fetchProducts}
-            className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800"
-          >
-            Try Again
-          </button>
-            </div>
-          );
-      </div>
-    );
+    return <ErrorCard error={error} onRetry={fetchProducts} fullScreen={true} />;
   }
 
   return (
-    <div className="font-jost min-h-screen bg-gray-50">
+    <div className="font-jost min-h-screen bg-slate-900">
       
       {/* Hero Section with Local Images */}
       <section className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-black">
@@ -115,14 +101,12 @@ const Home = () => {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="mb-12 text-center">
           <h2 
-            className="text-dark-900 font-bold mb-4 text-center"
-            style={{ fontSize: 'var(--text-heading-2)', lineHeight: 'var(--text-heading-2--line-height)' }}
+            className="text-white font-bold mb-4 text-center text-heading-1"
           >
             Featured Products
           </h2>
           <p 
-            className="text-dark-600 text-center max-w-2xl mx-auto"
-            style={{ fontSize: 'var(--text-body)', lineHeight: 'var(--text-body--line-height)' }}
+            className="text-gray-300 text-center max-w-2xl mx-auto text-body "
           >
             Discover our latest collection of premium products
           </p>
@@ -151,33 +135,22 @@ const Home = () => {
         {loading && <Loading />}
         
         {error && (
-          <div className="text-center py-12">
-            <div className="bg-red-50 rounded-lg p-8 max-w-md mx-auto">
-              <h3 className="text-xl font-semibold text-red-600 mb-4">Error Loading Products</h3>
-              <p className="text-red-500 mb-4">{error}</p>
-              <button
-                onClick={fetchProducts}
-                className="bg-red-600 text-white px-6 py-2 rounded-md hover:bg-red-700 transition-colors duration-200"
-              >
-                Try Again
-              </button>
-            </div>
-          </div>
+          <ErrorCard error={error} onRetry={fetchProducts} />
         )}
 
         {!loading && !error && (
           <>
             {products.length === 0 ? (
               <div className="text-center py-12">
-                <div className="bg-gray-100 rounded-lg p-8 max-w-md mx-auto">
-                  <h3 className="text-xl font-semibold text-gray-600 mb-2">No products found</h3>
-                  <p className="text-gray-500">Check back later for new arrivals!</p>
+                <div className="bg-gray-800 rounded-lg p-8 max-w-md mx-auto">
+                  <h3 className="text-xl font-semibold text-gray-200 mb-2">No products found</h3>
+                  <p className="text-gray-400">Check back later for new arrivals!</p>
                 </div>
               </div>
             ) : (
               <>
                 <div className="mb-8">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">All Products</h3>
+                  <h3 className="text-2xl font-bold text-white mb-4">All Products</h3>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {products.map((product) => (

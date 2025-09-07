@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+const checkServerHealth = async () => {
   const now = new Date().toISOString();
   console.log('🕒 Health check endpoint called at:', now);
   return NextResponse.json({ 
@@ -8,4 +8,6 @@ export async function GET() {
     timestamp: now,
     env: process.env.NODE_ENV
   });
-}
+};
+
+export { checkServerHealth as GET };

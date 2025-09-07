@@ -3,7 +3,7 @@ import { db } from '@/lib/db';
 import { products } from '@/lib/schema';
 import { sql } from 'drizzle-orm';
 
-export async function GET() {
+const testDatabaseConnection = async () => {
   try {
     console.log('🔍 Testing database connection...');
     console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
@@ -42,4 +42,6 @@ export async function GET() {
       { status: 500 }
     );
   }
-}
+};
+
+export { testDatabaseConnection as GET };

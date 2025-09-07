@@ -2,8 +2,11 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { MagnifyingGlassIcon, ShoppingBagIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useStore } from '@/lib/store';
+import { useSession } from '@/lib/auth/client';
+import UserProfileDropdown from '@/components/auth/UserProfileDropdown';
 
 interface NavbarProps {
   className?: string;
@@ -12,6 +15,7 @@ interface NavbarProps {
 export const Navbar = ({ className = '' }: NavbarProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const cart = useStore((state) => state.cart);
+  const { data: session, isPending } = useSession();
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const navigationItems = [
@@ -27,7 +31,7 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
   };
 
   return (
-    <nav className={`bg-light-100 border-b border-light-300 sticky top-0 z-50 ${className}`}>
+    <nav className={`bg-slate-800 border-b border-slate-700 sticky top-0 z-50 ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -38,8 +42,7 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
                 alt="CODALWARE"
                 width={60}
                 height={24}
-                className="h-6 w-auto"
-                style={{ filter: 'invert(1) brightness(0)' }}
+                className="h-6 w-auto brightness-0 invert"
                 priority
               />
             </div>
@@ -52,11 +55,11 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-dark-700 hover:text-dark-900 px-3 py-2 font-medium transition-colors duration-200 relative group"
+                  className="text-gray-300 hover:text-white px-3 py-2 font-medium transition-colors duration-200 relative group"
                   style={{ fontSize: 'var(--text-body)', lineHeight: 'var(--text-body--line-height)' }}
                 >
                   {item.name}
-                  <span className="absolute inset-x-0 bottom-0 h-0.5 bg-dark-900 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-center"></span>
+                  <span className="absolute inset-x-0 bottom-0 h-0.5 bg-yellow-400 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-center"></span>
                 </a>
               ))}
             </div>
@@ -66,7 +69,7 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
           <div className="flex items-center space-x-4">
             {/* Search Icon */}
             <button 
-              className="p-2 text-dark-700 hover:text-dark-900 transition-colors duration-200"
+              className="p-2 text-gray-300 hover:text-white transition-colors duration-200"
               aria-label="Search"
             >
               <MagnifyingGlassIcon className="h-6 w-6" />
@@ -75,23 +78,47 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
             {/* Shopping Cart */}
             <div className="relative">
               <button 
-                className="p-2 text-dark-700 hover:text-dark-900 transition-colors duration-200"
+                className="p-2 text-gray-300 hover:text-white transition-colors duration-200"
                 aria-label="Shopping cart"
               >
                 <ShoppingBagIcon className="h-6 w-6" />
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red text-light-100 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                  <span className="absolute -top-1 -right-1 bg-yellow-500 text-slate-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
                     {totalItems}
                   </span>
                 )}
               </button>
             </div>
 
+            {/* Authentication */}
+            {isPending ? (
+              <div className="animate-pulse">
+                <div className="h-8 w-8 bg-slate-600 rounded-full"></div>
+              </div>
+            ) : session?.user ? (
+              <UserProfileDropdown className="text-white" />
+            ) : (
+              <div className="hidden md:flex items-center space-x-2">
+                <Link 
+                  href="/sign-in"
+                  className="px-3 py-2 text-gray-300 hover:text-white transition-colors duration-200"
+                >
+                  Sign In
+                </Link>
+                <Link 
+                  href="/sign-up"
+                  className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-medium rounded-lg transition-colors duration-200"
+                >
+                  Sign Up
+                </Link>
+              </div>
+            )}
+
             {/* Mobile menu button */}
             <div className="md:hidden">
               <button
                 onClick={toggleMobileMenu}
-                className="p-2 text-dark-700 hover:text-dark-900 transition-colors duration-200"
+                className="p-2 text-gray-300 hover:text-white transition-colors duration-200"
                 aria-label="Toggle menu"
               >
                 {isMobileMenuOpen ? (
@@ -107,18 +134,38 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
         {/* Mobile Navigation Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-light-300 bg-light-100">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-slate-700 bg-slate-800">
               {navigationItems.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-dark-700 hover:text-dark-900 block px-3 py-2 font-medium transition-colors duration-200"
+                  className="text-gray-300 hover:text-white block px-3 py-2 font-medium transition-colors duration-200"
                   style={{ fontSize: 'var(--text-body)', lineHeight: 'var(--text-body--line-height)' }}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.name}
                 </a>
               ))}
+              
+              {/* Mobile Authentication */}
+              {!isPending && !session?.user && (
+                <div className="border-t border-slate-700 pt-3 mt-3 space-y-1">
+                  <Link
+                    href="/sign-in"
+                    className="text-gray-300 hover:text-white block px-3 py-2 font-medium transition-colors duration-200"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/sign-up"
+                    className="bg-yellow-500 hover:bg-yellow-600 text-slate-900 block px-3 py-2 font-medium rounded-lg mx-3 text-center transition-colors duration-200"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         )}

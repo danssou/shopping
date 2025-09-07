@@ -1,7 +1,7 @@
 import { db } from '../lib/db';
 import { products } from '../lib/schema';
 
-async function clearProducts() {
+const clearProducts = async () => {
   try {
     console.log('Clearing existing products...');
     await db.delete(products);
@@ -12,6 +12,6 @@ async function clearProducts() {
   } finally {
     process.exit(0);
   }
-}
+};
 
 clearProducts();
