@@ -142,7 +142,7 @@ const Home = () => {
           <>
             {products.length === 0 ? (
               <div className="text-center py-12">
-                <div className="bg-gray-800 rounded-lg p-8 max-w-md mx-auto">
+                <div className="bg-gray-800 rounded-md p-8 max-w-md mx-auto">
                   <h3 className="text-xl font-semibold text-gray-200 mb-2">No products found</h3>
                   <p className="text-gray-400">Check back later for new arrivals!</p>
                 </div>
