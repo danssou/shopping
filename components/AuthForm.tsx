@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-import { signInAction, signUpAction } from '@/lib/auth/actions';
+import { signIn, signUp } from '@/lib/auth-client';
 
 interface AuthFormProps {
   mode: 'signin' | 'signup';
@@ -13,7 +13,6 @@ export default function AuthForm({ mode }: AuthFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/';
 
@@ -22,19 +21,39 @@ export default function AuthForm({ mode }: AuthFormProps) {
     setError('');
     
     try {
-      const result = mode === 'signin' 
-        ? await signInAction(formData)
-        : await signUpAction(formData);
+      const email = formData.get('email')?.toString() || '';
+      const password = formData.get('password')?.toString() || '';
+      const name = formData.get('name')?.toString() || '';
 
-      if (result?.error) {
-        setError(result.error);
-      } else if (result?.success) {
-        // Redirect to callback URL or home after successful auth
-        router.push(callbackUrl);
-        router.refresh();
+      if (mode === 'signin') {
+        await signIn.email({ 
+          email, 
+          password 
+        });
+      } else {
+        await signUp.email({ 
+          email, 
+          password,
+          name 
+        });
       }
-    } catch (error) {
-      setError('An unexpected error occurred');
+      
+      // Force a hard refresh to ensure session is loaded
+      window.location.href = callbackUrl;
+    } catch (error: unknown) {
+      if (error && typeof error === 'object' && 'error' in error) {
+        const authError = error as { error?: { message?: string } };
+        if (authError.error?.message) {
+          setError(authError.error.message);
+        } else {
+          setError('An unexpected error occurred');
+        }
+      } else if (error && typeof error === 'object' && 'message' in error) {
+        const messageError = error as { message: string };
+        setError(messageError.message);
+      } else {
+        setError('An unexpected error occurred');
+      }
       console.error('Auth error:', error);
     } finally {
       setIsLoading(false);

@@ -57,14 +57,53 @@ export async function signUpAction(formData: FormData) {
       user: result.user,
     };
   } catch (error) {
+    console.error('Sign-up error:', error);
+    
     if (error instanceof z.ZodError) {
       return {
         error: error.issues[0].message,
       };
     }
     
+    // Check if it's a Better Auth APIError
+    if (error && typeof error === 'object' && 'status' in error && 'statusCode' in error) {
+      const apiError = error as { status: string; statusCode: number; message?: string };
+      
+      // Handle specific API errors
+      if (apiError.statusCode === 422 && apiError.status === 'UNPROCESSABLE_ENTITY') {
+        return {
+          error: 'An account with this email already exists. Please sign in instead.',
+        };
+      }
+    }
+    
+    // Check if it's a Better Auth error with message
+    if (error && typeof error === 'object' && 'message' in error) {
+      const errorMessage = (error as { message: string }).message;
+      
+      // Handle specific error cases
+      if (errorMessage.includes('User already exists') || errorMessage.includes('already exists') || errorMessage.includes('duplicate') || errorMessage.includes('unique')) {
+        return {
+          error: 'An account with this email already exists. Please sign in instead.',
+        };
+      }
+      
+      if (errorMessage.includes('validation') || errorMessage.includes('invalid')) {
+        return {
+          error: 'Please check your email and password format.',
+        };
+      }
+    }
+    
+    // Check the error logs for specific Better Auth messages
+    if (error && typeof error === 'string' && error.includes('existing email')) {
+      return {
+        error: 'An account with this email already exists. Please sign in instead.',
+      };
+    }
+    
     return {
-      error: 'An unexpected error occurred',
+      error: 'An unexpected error occurred. Please try again.',
     };
   }
 }

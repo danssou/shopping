@@ -1,8 +1,8 @@
-import { pgTable, uuid, varchar, boolean, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, varchar, boolean, timestamp } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 export const user = pgTable('user', {
-  id: uuid('id').primaryKey().defaultRandom(),
+  id: varchar('id', { length: 255 }).primaryKey(), // Use varchar to match Better Auth's ID format
   name: varchar('name', { length: 255 }),
   email: varchar('email', { length: 255 }).notNull().unique(),
   emailVerified: boolean('email_verified').default(false).notNull(),

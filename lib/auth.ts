@@ -4,15 +4,11 @@ import { db } from "./db";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
-    provider: "pg", // or "mysql", "sqlite"
+    provider: "pg",
   }),
   emailAndPassword: {
     enabled: true,
   },
-  socialProviders: {
-    github: {
-      clientId: process.env.GITHUB_CLIENT_ID as string,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-    },
-  },
+  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
+  secret: process.env.BETTER_AUTH_SECRET || "your-secret-key-here",
 });

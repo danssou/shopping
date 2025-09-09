@@ -99,3 +99,6 @@ export const THEME_MODES = {
 
 // Export products
 export * from './products';
+
+// Export carousel
+export * from './carousel';

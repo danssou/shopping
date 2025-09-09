@@ -1,10 +1,10 @@
-import { pgTable, uuid, varchar, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, varchar, timestamp } from 'drizzle-orm/pg-core';
 import { sql, relations } from 'drizzle-orm';
 import { user } from './user';
 
 export const session = pgTable('session', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  userId: uuid('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+  id: varchar('id', { length: 255 }).primaryKey(), // Use varchar to match Better Auth's ID format
+  userId: varchar('user_id', { length: 255 }).notNull().references(() => user.id, { onDelete: 'cascade' }),
   token: varchar('token', { length: 255 }).notNull().unique(),
   ipAddress: varchar('ip_address', { length: 45 }),
   userAgent: varchar('user_agent', { length: 500 }),

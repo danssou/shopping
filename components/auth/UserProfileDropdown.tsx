@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { useSession, signOut } from '@/lib/auth/client';
+import { useSession, signOut } from '@/lib/auth-client';
 import { ChevronDownIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 
 interface UserProfileDropdownProps {
@@ -60,7 +60,7 @@ export default function UserProfileDropdown({ className = '' }: UserProfileDropd
     <div className={`relative ${className}`} data-dropdown="user-profile">
       <button
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-        className="flex items-center space-x-3 text-slate-700 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 rounded-lg p-2 transition-colors duration-200"
+        className="flex items-center space-x-3 text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus:ring-offset-slate-800 rounded-lg p-2 transition-colors duration-200"
       >
         {user.image ? (
           <Image
@@ -68,21 +68,21 @@ export default function UserProfileDropdown({ className = '' }: UserProfileDropd
             alt={user.name || 'User avatar'}
             width={32}
             height={32}
-            className="rounded-full object-cover"
+            className="rounded-full object-cover ring-2 ring-yellow-500/20"
           />
         ) : (
-          <UserCircleIcon className="h-8 w-8 text-slate-500" />
+          <UserCircleIcon className="h-8 w-8 text-gray-300" />
         )}
         <div className="hidden md:block text-left">
-          <p className="text-sm font-medium text-slate-900">
+          <p className="text-sm font-medium text-white">
             {user.name || 'User'}
           </p>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-gray-400">
             {user.email}
           </p>
         </div>
         <ChevronDownIcon 
-          className={`h-4 w-4 text-slate-400 transition-transform duration-200 ${
+          className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${
             isDropdownOpen ? 'rotate-180' : ''
           }`} 
         />
