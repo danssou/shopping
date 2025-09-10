@@ -3,10 +3,11 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { MagnifyingGlassIcon, ShoppingBagIcon, Bars3Icon, XMarkIcon, UserCircleIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, ShoppingBagIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useStore } from '@/lib/store';
 import { useSession, signOut } from '@/lib/auth-client';
 import UserProfileDropdown from '@/components/auth/UserProfileDropdown';
+import ProfileAvatar from '@/components/profile/ProfileAvatar';
 
 interface NavbarProps {
   className?: string;
@@ -15,18 +16,8 @@ interface NavbarProps {
 export const Navbar = ({ className = '' }: NavbarProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const cart = useStore((state) => state.cart);
-  const { data: session, isPending, error } = useSession();
+  const { data: session, isPending } = useSession();
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-  // Debug logging
-  console.log('🔍 Navbar Debug:', {
-    session,
-    isPending,
-    error,
-    sessionUser: session?.user,
-    hasSession: !!session,
-    hasUser: !!session?.user
-  });
 
   const navigationItems = [
     { name: 'Men', href: '/men' },
@@ -161,17 +152,14 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
               {!isPending && session?.user ? (
                 <div className="border-t border-slate-700 pt-3 mt-3">
                   <div className="flex items-center px-3 py-2 space-x-3">
-                    {session.user.image ? (
-                      <Image
-                        src={session.user.image}
-                        alt={session.user.name || 'User avatar'}
-                        width={32}
-                        height={32}
-                        className="rounded-full object-cover ring-2 ring-yellow-500/20"
-                      />
-                    ) : (
-                      <UserCircleIcon className="h-8 w-8 text-gray-300" />
-                    )}
+                    <ProfileAvatar 
+                      user={{
+                        name: session.user.name,
+                        email: session.user.email,
+                        image: session.user.image || undefined
+                      }} 
+                      size="sm" 
+                    />
                     <div>
                       <p className="text-sm font-medium text-white">
                         {session.user.name || 'User'}

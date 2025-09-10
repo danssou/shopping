@@ -8,6 +8,13 @@
       "when": 1757450760419,
       "tag": "0000_clumsy_raider",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1757454347085,
+      "tag": "0001_giant_kitty_pryde",
+      "breakpoints": true
     }
   ]
 }
