@@ -3,6 +3,7 @@
 import { useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { useStore } from '@/lib/store';
+import { useCart, useWishlist, convertToCartProduct, convertToWishlistItem, convertConstantToCartProduct, convertConstantToWishlistItem } from '@/hooks/useStore';
 import { Loading, ErrorCard } from '@/components/ui';
 import { Card } from '@/components';
 import { FEATURED_PRODUCTS } from '@/constants';
@@ -22,6 +23,8 @@ interface Product {
 
 const Home = () => {
   const { products, loading, error, setProducts, setLoading, setError } = useStore();
+  const { addToCart } = useCart();
+  const { toggleWishlist } = useWishlist();
 
   const fetchProducts = useCallback(async () => {
     try {
@@ -125,8 +128,20 @@ const Home = () => {
               image={product.image}
               colors={product.colors}
               isBestSeller={product.isBestSeller}
-              onAddToCart={(id) => console.log('Added to cart:', id)}
-              onToggleWishlist={(id) => console.log('Toggled wishlist:', id)}
+              onAddToCart={(id) => {
+                const productData = FEATURED_PRODUCTS.find(p => p.id === id);
+                if (productData) {
+                  const cartProduct = convertConstantToCartProduct(productData);
+                  addToCart(cartProduct);
+                }
+              }}
+              onToggleWishlist={(id) => {
+                const productData = FEATURED_PRODUCTS.find(p => p.id === id);
+                if (productData) {
+                  const wishlistItem = convertConstantToWishlistItem(productData);
+                  toggleWishlist(wishlistItem);
+                }
+              }}
             />
           ))}
         </div>
@@ -162,8 +177,20 @@ const Home = () => {
                       price={`$${product.price}`}
                       image={product.imageUrl || '/shoes/shoe-1.jpg'}
                       colors={3}
-                      onAddToCart={(id) => console.log('Added to cart:', id)}
-                      onToggleWishlist={(id) => console.log('Toggled wishlist:', id)}
+                      onAddToCart={(id) => {
+                        const productData = products.find(p => p.id === id);
+                        if (productData) {
+                          const cartProduct = convertToCartProduct(productData as unknown as Record<string, unknown>);
+                          addToCart(cartProduct);
+                        }
+                      }}
+                      onToggleWishlist={(id) => {
+                        const productData = products.find(p => p.id === id);
+                        if (productData) {
+                          const wishlistItem = convertToWishlistItem(productData as unknown as Record<string, unknown>);
+                          toggleWishlist(wishlistItem);
+                        }
+                      }}
                     />
                   ))}
                 </div>

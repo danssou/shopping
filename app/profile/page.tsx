@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useSession } from '@/lib/auth-client';
+import { useWishlist, useCart } from '@/hooks/useStore';
 import { 
   UserIcon, 
   EnvelopeIcon, 
@@ -12,13 +13,20 @@ import {
   DeviceTabletIcon,
   CalendarIcon,
   ShieldCheckIcon,
-  BellIcon
+  BellIcon,
+  HeartIcon,
+  ShoppingCartIcon,
+  TrashIcon
 } from '@heroicons/react/24/outline';
+import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 import ProfileAvatar from '@/components/profile/ProfileAvatar';
+import Image from 'next/image';
 
 export default function ProfilePage() {
   const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState('personal');
+  const { items: wishlistItems, removeFromWishlist, clearWishlist } = useWishlist();
+  const { addToCart } = useCart();
   
   const user = session?.user;
   
@@ -95,6 +103,7 @@ export default function ProfilePage() {
             <nav className="flex space-x-8 px-8">
               {[
                 { id: 'personal', label: 'Personal Info', icon: UserIcon },
+                { id: 'wishlist', label: 'Wishlist', icon: HeartIcon },
                 { id: 'devices', label: 'Connected Devices', icon: ComputerDesktopIcon },
                 { id: 'security', label: 'Security', icon: ShieldCheckIcon },
                 { id: 'preferences', label: 'Preferences', icon: BellIcon },
@@ -246,6 +255,90 @@ export default function ProfilePage() {
                     Save Changes
                   </button>
                 </div>
+              </div>
+            )}
+
+            {activeTab === 'wishlist' && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">My Wishlist</h3>
+                    <p className="text-slate-400">Items you&apos;ve saved for later</p>
+                  </div>
+                  {wishlistItems.length > 0 && (
+                    <button
+                      onClick={clearWishlist}
+                      className="flex items-center text-red-400 hover:text-red-300 text-sm"
+                    >
+                      <TrashIcon className="h-4 w-4 mr-1" />
+                      Clear All
+                    </button>
+                  )}
+                </div>
+
+                {wishlistItems.length === 0 ? (
+                  <div className="text-center py-12">
+                    <HeartIcon className="h-16 w-16 text-slate-600 mx-auto mb-4" />
+                    <h4 className="text-lg font-medium text-slate-400 mb-2">Your wishlist is empty</h4>
+                    <p className="text-slate-500">Items you like will appear here</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {wishlistItems.map((item) => (
+                      <div key={item.id} className="bg-slate-700 rounded-lg overflow-hidden">
+                        <div className="aspect-square relative">
+                          {item.imageUrl ? (
+                            <Image
+                              src={item.imageUrl}
+                              alt={item.name}
+                              fill
+                              className="object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-slate-600 flex items-center justify-center">
+                              <span className="text-slate-400">No Image</span>
+                            </div>
+                          )}
+                          <button
+                            onClick={() => removeFromWishlist(item.id)}
+                            className="absolute top-2 right-2 p-1 bg-black bg-opacity-50 rounded-full text-red-400 hover:text-red-300"
+                          >
+                            <HeartSolidIcon className="h-5 w-5" />
+                          </button>
+                        </div>
+                        <div className="p-4">
+                          <h4 className="font-medium text-white mb-1">{item.name}</h4>
+                          <p className="text-slate-400 text-sm mb-2">{item.category}</p>
+                          <div className="flex items-center justify-between">
+                            <span className="text-lg font-semibold text-yellow-500">{item.price}</span>
+                            <button
+                              onClick={() => {
+                                // Convert wishlist item to cart product format
+                                const cartProduct = {
+                                  id: item.id,
+                                  name: item.name,
+                                  description: null,
+                                  price: item.price.replace('$', ''),
+                                  imageUrl: item.imageUrl,
+                                  category: item.category || null,
+                                  brand: null,
+                                  stock: null,
+                                  createdAt: null,
+                                  updatedAt: null,
+                                };
+                                addToCart(cartProduct);
+                              }}
+                              className="flex items-center text-sm bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-3 py-1 rounded-md font-medium transition-colors duration-200"
+                            >
+                              <ShoppingCartIcon className="h-4 w-4 mr-1" />
+                              Add to Cart
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 

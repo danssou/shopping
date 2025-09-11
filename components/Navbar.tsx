@@ -3,11 +3,13 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { MagnifyingGlassIcon, ShoppingBagIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import { useStore } from '@/lib/store';
+import { MagnifyingGlassIcon, ShoppingBagIcon, HeartIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { useCartStore } from '@/lib/stores';
+import { useWishlist } from '@/hooks/useStore';
 import { useSession, signOut } from '@/lib/auth-client';
 import UserProfileDropdown from '@/components/auth/UserProfileDropdown';
 import ProfileAvatar from '@/components/profile/ProfileAvatar';
+import CartSidebar from '@/components/cart/CartSidebar';
 
 interface NavbarProps {
   className?: string;
@@ -15,9 +17,10 @@ interface NavbarProps {
 
 export const Navbar = ({ className = '' }: NavbarProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const cart = useStore((state) => state.cart);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const totalItems = useCartStore(state => state.getCartCount());
+  const { count: wishlistCount } = useWishlist();
   const { data: session, isPending } = useSession();
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const navigationItems = [
     { name: 'Men', href: '/men' },
@@ -76,9 +79,25 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
               <MagnifyingGlassIcon className="h-6 w-6" />
             </button>
 
+            {/* Wishlist */}
+            <Link href="/wishlist" className="relative">
+              <button 
+                className="p-2 text-gray-300 hover:text-white transition-colors duration-200"
+                aria-label="Wishlist"
+              >
+                <HeartIcon className="h-6 w-6" />
+                {wishlistCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                    {wishlistCount}
+                  </span>
+                )}
+              </button>
+            </Link>
+
             {/* Shopping Cart */}
             <div className="relative">
               <button 
+                onClick={() => setIsCartOpen(true)}
                 className="p-2 text-gray-300 hover:text-white transition-colors duration-200"
                 aria-label="Shopping cart"
               >
@@ -223,6 +242,12 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
           </div>
         )}
       </div>
+
+      {/* Cart Sidebar */}
+      <CartSidebar 
+        isOpen={isCartOpen} 
+        onClose={() => setIsCartOpen(false)} 
+      />
     </nav>
   );
 };
