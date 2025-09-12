@@ -1,3 +1,9 @@
+// Re-export from utility modules
+export * from './formatters';
+export * from './validation';
+export * from './notifications';
+
+// Legacy utilities (consider moving to formatters.ts)
 export const formatPrice = (price: string | number): string => {
   const numPrice = typeof price === 'string' ? parseFloat(price) : price;
   return new Intl.NumberFormat('en-US', {

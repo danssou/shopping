@@ -6,6 +6,7 @@ import { useSession } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import SignInModal from '@/components/auth/SignInModal';
 import { 
   CreditCardIcon, 
   BanknotesIcon, 
@@ -27,6 +28,7 @@ export default function CheckoutPage() {
   
   const [selectedPayment, setSelectedPayment] = useState<PaymentMethod>('card');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [formData, setFormData] = useState({
     fullName: session?.user?.name || '',
     email: session?.user?.email || '',
@@ -81,7 +83,7 @@ export default function CheckoutPage() {
             <p className="text-slate-400 mb-6">Add some items to your cart before checking out.</p>
             <Link 
               href="/"
-              className="inline-block bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-medium px-6 py-3 rounded-lg transition-colors duration-200"
+              className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 hover:scale-105 shadow-md"
             >
               Continue Shopping
             </Link>
@@ -243,7 +245,37 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            <div className="bg-slate-800 rounded-lg border border-slate-700 p-6">
+            {/* Authentication Requirement Section */}
+            {!session ? (
+              <div className="bg-gradient-to-br from-yellow-600/20 to-orange-600/20 border border-yellow-500/30 rounded-lg p-6">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg className="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-2">Authentication Required</h3>
+                  <p className="text-slate-300 mb-6">
+                    Please sign in or create an account to continue with your purchase. Your cart items will be saved!
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                    <button
+                      onClick={() => setShowAuthModal(true)}
+                      className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold rounded-lg transition-all duration-200 hover:scale-105"
+                    >
+                      Sign In / Sign Up
+                    </button>
+                    <Link
+                      href="/"
+                      className="px-6 py-3 bg-slate-600 hover:bg-slate-500 text-white font-semibold rounded-lg transition-all duration-200 text-center"
+                    >
+                      Continue Shopping
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-slate-800 rounded-lg border border-slate-700 p-6">
               <h2 className="text-xl font-semibold text-white mb-6">Payment Method</h2>
               
               <div className="space-y-4 mb-6">
@@ -252,7 +284,7 @@ export default function CheckoutPage() {
                   return (
                     <label key={method.id} className={`flex items-center p-4 border rounded-lg cursor-pointer transition-colors duration-200 ${
                       selectedPayment === method.id 
-                        ? 'border-yellow-500 bg-yellow-500 bg-opacity-10' 
+                        ? 'border-emerald-500 bg-emerald-500/10' 
                         : 'border-slate-600 hover:border-slate-500'
                     }`}>
                       <input
@@ -267,10 +299,10 @@ export default function CheckoutPage() {
                       <div className="flex-1">
                         <div className="text-white font-medium">{method.name}</div>
                         <div className="text-sm text-gray-400">{method.description}</div>
-                        <div className="text-xs text-yellow-400">{method.fees}</div>
+                        <div className="text-xs text-emerald-400">{method.fees}</div>
                       </div>
                       {selectedPayment === method.id && (
-                        <CheckCircleIcon className="h-6 w-6 text-yellow-500" />
+                        <CheckCircleIcon className="h-6 w-6 text-emerald-500" />
                       )}
                     </label>
                   );
@@ -339,6 +371,7 @@ export default function CheckoutPage() {
                 </div>
               )}
             </div>
+            )}
           </div>
 
           <div className="lg:sticky lg:top-8 lg:h-fit">
@@ -397,11 +430,30 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
+              {/* Continue Shopping Section */}
+              <div className="bg-gradient-to-br from-blue-600/10 to-purple-600/10 border border-blue-500/20 rounded-lg p-4 my-6">
+                <div className="text-center">
+                  <h3 className="text-white font-medium mb-2">Need something else?</h3>
+                  <p className="text-slate-300 text-sm mb-3">
+                    Don&apos;t miss out on our amazing deals! Add more items to your cart.
+                  </p>
+                  <Link
+                    href="/"
+                    className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-medium rounded-lg transition-all duration-200 hover:scale-105 text-sm"
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Continue Shopping
+                  </Link>
+                </div>
+              </div>
+
               <form onSubmit={handleSubmit} className="mt-6">
                 <button
                   type="submit"
                   disabled={isProcessing}
-                  className="w-full bg-yellow-500 hover:bg-yellow-600 disabled:bg-yellow-700 text-slate-900 font-semibold py-4 rounded-lg transition-colors duration-200 flex items-center justify-center"
+                  className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:from-slate-600 disabled:to-slate-700 text-white font-semibold py-4 rounded-lg transition-all duration-200 flex items-center justify-center hover:scale-105 active:scale-95 shadow-lg"
                 >
                   {isProcessing ? (
                     <>
@@ -421,6 +473,13 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
+      
+      {/* Sign In Modal */}
+      <SignInModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onSuccess={() => setShowAuthModal(false)}
+      />
     </div>
   );
 }

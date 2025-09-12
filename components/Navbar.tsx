@@ -10,6 +10,7 @@ import { useSession, signOut } from '@/lib/auth-client';
 import UserProfileDropdown from '@/components/auth/UserProfileDropdown';
 import ProfileAvatar from '@/components/profile/ProfileAvatar';
 import CartSidebar from '@/components/cart/CartSidebar';
+import { useCartPersistence } from '@/hooks/useCartPersistence';
 
 interface NavbarProps {
   className?: string;
@@ -21,6 +22,7 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
   const totalItems = useCartStore(state => state.getCartCount());
   const { count: wishlistCount } = useWishlist();
   const { data: session, isPending } = useSession();
+  const { showWelcomeNotification } = useCartPersistence();
 
   const navigationItems = [
     { name: 'Men', href: '/men' },
@@ -79,33 +81,45 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
               <MagnifyingGlassIcon className="h-6 w-6" />
             </button>
 
-            {/* Wishlist */}
-            <Link href="/wishlist" className="relative">
-              <button 
-                className="p-2 text-gray-300 hover:text-white transition-colors duration-200"
-                aria-label="Wishlist"
-              >
-                <HeartIcon className="h-6 w-6" />
-                {wishlistCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
-                    {wishlistCount}
-                  </span>
-                )}
-              </button>
-            </Link>
+            {/* Wishlist - Only show when authenticated */}
+            {session && (
+              <Link href="/wishlist" className="relative">
+                <button 
+                  className="p-2 text-gray-300 hover:text-white transition-colors duration-200"
+                  aria-label="Wishlist"
+                >
+                  <HeartIcon className="h-6 w-6" />
+                  {wishlistCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                      {wishlistCount}
+                    </span>
+                  )}
+                </button>
+              </Link>
+            )}
 
             {/* Shopping Cart */}
             <div className="relative">
               <button 
                 onClick={() => setIsCartOpen(true)}
-                className="p-2 text-gray-300 hover:text-white transition-colors duration-200"
+                className={`p-2 text-gray-300 hover:text-white transition-colors duration-200 ${
+                  showWelcomeNotification ? 'animate-pulse' : ''
+                }`}
                 aria-label="Shopping cart"
               >
-                <ShoppingBagIcon className="h-6 w-6" />
+                <ShoppingBagIcon className={`h-6 w-6 ${
+                  showWelcomeNotification ? 'animate-bounce text-yellow-400' : ''
+                }`} />
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-yellow-500 text-slate-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                  <span className={`absolute -top-1 -right-1 bg-yellow-500 text-slate-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium ${
+                    showWelcomeNotification ? 'animate-ping' : ''
+                  }`}>
                     {totalItems}
                   </span>
+                )}
+                {/* Flashing ring effect when notification is showing */}
+                {showWelcomeNotification && (
+                  <div className="absolute inset-0 rounded-full border-2 border-yellow-400 animate-ping opacity-75"></div>
                 )}
               </button>
             </div>

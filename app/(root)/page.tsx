@@ -1,12 +1,16 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import Image from 'next/image';
 import { useStore } from '@/lib/store';
 import { useCart, useWishlist, convertToCartProduct, convertToWishlistItem, convertConstantToCartProduct, convertConstantToWishlistItem } from '@/hooks/useStore';
+import { useSession } from '@/lib/auth-client';
 import { Loading, ErrorCard } from '@/components/ui';
 import { Card } from '@/components';
 import { FEATURED_PRODUCTS } from '@/constants';
+import SignInModal from '@/components/auth/SignInModal';
+import { useNotifications } from '@/components/notifications';
+import { ShoppingBagIcon } from '@heroicons/react/24/outline';
 
 interface Product {
   id: string;
@@ -22,9 +26,89 @@ interface Product {
 }
 
 const Home = () => {
-  const { products, loading, error, setProducts, setLoading, setError } = useStore();
+  const { products, loading, error: storeError, setProducts, setLoading, setError } = useStore();
   const { addToCart } = useCart();
   const { toggleWishlist } = useWishlist();
+  const { data: session } = useSession();
+  const { success, error, warning, info } = useNotifications();
+  const [showSignInModal, setShowSignInModal] = useState(false);
+  const [pendingWishlistAction, setPendingWishlistAction] = useState<{ id: string; type: 'featured' | 'product' } | null>(null);
+
+  // Test functions for all notification types
+  const testSuccessNotification = () => {
+    success(
+      'Success!',
+      'This is a successful operation notification with beautiful green styling.',
+      {
+        icon: ShoppingBagIcon,
+        duration: 4000
+      }
+    );
+  };
+
+  const testErrorNotification = () => {
+    error(
+      'Error Occurred',
+      'This is an error notification with attention-grabbing red styling.',
+      {
+        duration: 5000
+      }
+    );
+  };
+
+  const testWarningNotification = () => {
+    warning(
+      'Warning',
+      'This is a warning notification with noticeable amber styling.',
+      {
+        duration: 4500
+      }
+    );
+  };
+
+  const testInfoNotification = () => {
+    info(
+      'Information',
+      'This is an informational notification with calming blue styling.',
+      {
+        duration: 4000
+      }
+    );
+  };
+
+  // Test function to simulate cart restoration
+  const testCartRestoration = () => {
+    // Simulate having items in localStorage for a user
+    const testUserId = 'test-user-123';
+    const testCartItems = [
+      { id: '1', name: 'Test Product 1', price: '29.99', quantity: 2 },
+      { id: '2', name: 'Test Product 2', price: '49.99', quantity: 1 }
+    ];
+    
+    // Save test cart to localStorage
+    localStorage.setItem(`user-cart-${testUserId}`, JSON.stringify(testCartItems));
+    localStorage.setItem('auth-state', 'guest');
+    
+    success(
+      'Test Cart Simulation Setup',
+      'Cart data saved to localStorage. Now sign in to test restoration!',
+      {
+        duration: 4000
+      }
+    );
+  };
+
+  // Direct test of cart notification
+  const testCartNotification = () => {
+    success(
+      'Welcome back!',
+      'Your cart has been restored with 3 items',
+      {
+        icon: ShoppingBagIcon,
+        duration: 5000
+      }
+    );
+  };
 
   const fetchProducts = useCallback(async () => {
     try {
@@ -50,12 +134,31 @@ const Home = () => {
     fetchProducts();
   }, [fetchProducts]);
 
+  const handleSignInSuccess = () => {
+    if (pendingWishlistAction) {
+      if (pendingWishlistAction.type === 'featured') {
+        const productData = FEATURED_PRODUCTS.find(p => p.id === pendingWishlistAction.id);
+        if (productData) {
+          const wishlistItem = convertConstantToWishlistItem(productData);
+          toggleWishlist(wishlistItem);
+        }
+      } else {
+        const productData = products.find(p => p.id === pendingWishlistAction.id);
+        if (productData) {
+          const wishlistItem = convertToWishlistItem(productData as unknown as Record<string, unknown>);
+          toggleWishlist(wishlistItem);
+        }
+      }
+      setPendingWishlistAction(null);
+    }
+  };
+
   if (loading) {
     return <Loading />;
   }
 
-  if (error) {
-    return <ErrorCard error={error} onRetry={fetchProducts} fullScreen={true} />;
+  if (storeError) {
+    return <ErrorCard error={storeError} onRetry={fetchProducts} fullScreen={true} />;
   }
 
   return (
@@ -82,9 +185,52 @@ const Home = () => {
               <p className="text-xl text-gray-300 mb-8 leading-relaxed">
                 Discover CODALWARE&apos;s cutting-edge products and innovative solutions. Quality crafted for the digital future.
               </p>
-              <button className="bg-white text-gray-900 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors duration-200 shadow-lg">
-                Shop Now
-              </button>
+              <div className="flex flex-wrap gap-4">
+                <button className="bg-white text-gray-900 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors duration-200 shadow-lg">
+                  Shop Now
+                </button>
+                
+                {/* Notification Test Buttons */}
+                <div className="flex flex-wrap gap-2">
+                  <button 
+                    onClick={testSuccessNotification}
+                    className="bg-emerald-500 text-white px-3 py-2 rounded-lg font-medium text-sm hover:bg-emerald-600 transition-colors duration-200 shadow-lg"
+                  >
+                    ✅ Success
+                  </button>
+                  <button 
+                    onClick={testErrorNotification}
+                    className="bg-red-500 text-white px-3 py-2 rounded-lg font-medium text-sm hover:bg-red-600 transition-colors duration-200 shadow-lg"
+                  >
+                    ❌ Error
+                  </button>
+                  <button 
+                    onClick={testWarningNotification}
+                    className="bg-amber-500 text-white px-3 py-2 rounded-lg font-medium text-sm hover:bg-amber-600 transition-colors duration-200 shadow-lg"
+                  >
+                    ⚠️ Warning
+                  </button>
+                  <button 
+                    onClick={testInfoNotification}
+                    className="bg-blue-500 text-white px-3 py-2 rounded-lg font-medium text-sm hover:bg-blue-600 transition-colors duration-200 shadow-lg"
+                  >
+                    ℹ️ Info
+                  </button>
+                </div>
+                
+                <button 
+                  onClick={testCartRestoration}
+                  className="bg-purple-500 text-white px-4 py-3 rounded-lg font-semibold text-sm hover:bg-purple-600 transition-colors duration-200 shadow-lg"
+                >
+                  Setup Cart Test
+                </button>
+                <button 
+                  onClick={testCartNotification}
+                  className="bg-indigo-500 text-white px-4 py-3 rounded-lg font-semibold text-sm hover:bg-indigo-600 transition-colors duration-200 shadow-lg"
+                >
+                  Cart Welcome Demo
+                </button>
+              </div>
             </div>
             <div className="lg:w-1/2 flex justify-center">
               <Image
@@ -136,6 +282,11 @@ const Home = () => {
                 }
               }}
               onToggleWishlist={(id) => {
+                if (!session) {
+                  setPendingWishlistAction({ id, type: 'featured' });
+                  setShowSignInModal(true);
+                  return;
+                }
                 const productData = FEATURED_PRODUCTS.find(p => p.id === id);
                 if (productData) {
                   const wishlistItem = convertConstantToWishlistItem(productData);
@@ -149,8 +300,8 @@ const Home = () => {
         {/* Database Products */}
         {loading && <Loading />}
         
-        {error && (
-          <ErrorCard error={error} onRetry={fetchProducts} />
+        {storeError && (
+          <ErrorCard error={storeError} onRetry={fetchProducts} />
         )}
 
         {!loading && !error && (
@@ -185,6 +336,11 @@ const Home = () => {
                         }
                       }}
                       onToggleWishlist={(id) => {
+                        if (!session) {
+                          setPendingWishlistAction({ id, type: 'product' });
+                          setShowSignInModal(true);
+                          return;
+                        }
                         const productData = products.find(p => p.id === id);
                         if (productData) {
                           const wishlistItem = convertToWishlistItem(productData as unknown as Record<string, unknown>);
@@ -200,6 +356,12 @@ const Home = () => {
         )}
       </section>
       
+      {/* Sign In Modal */}
+      <SignInModal
+        isOpen={showSignInModal}
+        onClose={() => setShowSignInModal(false)}
+        onSuccess={handleSignInSuccess}
+      />
     </div>
   );
 };
