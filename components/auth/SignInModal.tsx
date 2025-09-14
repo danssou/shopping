@@ -41,20 +41,70 @@ export default function SignInModal({ isOpen, onClose, onSuccess, redirectTo, in
     setIsLoading(true);
     setError('');
 
-    // Validation for sign-up
+    // Comprehensive validation
+    if (!email.trim()) {
+      setError('Email is required');
+      setIsLoading(false);
+      return;
+    }
+
+    if (!email.includes('@') || !email.includes('.')) {
+      setError('Please enter a valid email address');
+      setIsLoading(false);
+      return;
+    }
+
+    if (!password.trim()) {
+      setError('Password is required');
+      setIsLoading(false);
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long');
+      setIsLoading(false);
+      return;
+    }
+
+    // Additional validation for sign-up
     if (mode === 'signup') {
+      if (!name.trim()) {
+        setError('Full name is required');
+        setIsLoading(false);
+        return;
+      }
+
+      if (name.trim().length < 2) {
+        setError('Name must be at least 2 characters long');
+        setIsLoading(false);
+        return;
+      }
+
+      if (!confirmPassword.trim()) {
+        setError('Please confirm your password');
+        setIsLoading(false);
+        return;
+      }
+
       if (password !== confirmPassword) {
         setError('Passwords do not match');
         setIsLoading(false);
         return;
       }
-      if (password.length < 6) {
-        setError('Password must be at least 6 characters');
+
+      if (password.length < 8) {
+        setError('Password must be at least 8 characters for new accounts');
         setIsLoading(false);
         return;
       }
-      if (!name.trim()) {
-        setError('Name is required');
+
+      // Check for strong password
+      const hasUpperCase = /[A-Z]/.test(password);
+      const hasLowerCase = /[a-z]/.test(password);
+      const hasNumbers = /\d/.test(password);
+      
+      if (!hasUpperCase || !hasLowerCase || !hasNumbers) {
+        setError('Password must contain at least one uppercase letter, one lowercase letter, and one number');
         setIsLoading(false);
         return;
       }
@@ -136,7 +186,7 @@ export default function SignInModal({ isOpen, onClose, onSuccess, redirectTo, in
             {mode === 'signup' && (
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-2">
-                  Full Name
+                  Full Name <span className="text-red-400">*</span>
                 </label>
                 <input
                   id="name"
@@ -144,8 +194,12 @@ export default function SignInModal({ isOpen, onClose, onSuccess, redirectTo, in
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200"
-                  placeholder="Enter your full name"
+                  className={`w-full px-4 py-3 bg-slate-700/50 border rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 ${
+                    error && !name.trim() 
+                      ? 'border-red-500 focus:ring-red-500' 
+                      : 'border-slate-600 focus:ring-yellow-500'
+                  }`}
+                  placeholder="Enter your full name (required)"
                   disabled={isLoading}
                 />
               </div>
@@ -154,7 +208,7 @@ export default function SignInModal({ isOpen, onClose, onSuccess, redirectTo, in
             {/* Email Field */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
-                Email Address
+                Email Address <span className="text-red-400">*</span>
               </label>
               <input
                 id="email"
@@ -162,8 +216,12 @@ export default function SignInModal({ isOpen, onClose, onSuccess, redirectTo, in
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200"
-                placeholder="Enter your email"
+                className={`w-full px-4 py-3 bg-slate-700/50 border rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 ${
+                  error && (!email.trim() || !email.includes('@')) 
+                    ? 'border-red-500 focus:ring-red-500' 
+                    : 'border-slate-600 focus:ring-yellow-500'
+                }`}
+                placeholder="Enter your email address (required)"
                 disabled={isLoading}
               />
             </div>
@@ -171,7 +229,12 @@ export default function SignInModal({ isOpen, onClose, onSuccess, redirectTo, in
             {/* Password Field */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-2">
-                Password
+                Password <span className="text-red-400">*</span>
+                {mode === 'signup' && (
+                  <span className="text-xs text-slate-400 ml-2">
+                    (min 8 chars, uppercase, lowercase, number)
+                  </span>
+                )}
               </label>
               <div className="relative">
                 <input
@@ -180,8 +243,12 @@ export default function SignInModal({ isOpen, onClose, onSuccess, redirectTo, in
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 pr-12 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200"
-                  placeholder={mode === 'signup' ? 'Create a password (min 6 characters)' : 'Enter your password'}
+                  className={`w-full px-4 py-3 pr-12 bg-slate-700/50 border rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 ${
+                    error && !password.trim() 
+                      ? 'border-red-500 focus:ring-red-500' 
+                      : 'border-slate-600 focus:ring-yellow-500'
+                  }`}
+                  placeholder={mode === 'signup' ? 'Create a strong password (required)' : 'Enter your password (required)'}
                   disabled={isLoading}
                 />
                 <button
@@ -203,7 +270,7 @@ export default function SignInModal({ isOpen, onClose, onSuccess, redirectTo, in
             {mode === 'signup' && (
               <div>
                 <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-300 mb-2">
-                  Confirm Password
+                  Confirm Password <span className="text-red-400">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -212,8 +279,12 @@ export default function SignInModal({ isOpen, onClose, onSuccess, redirectTo, in
                     required
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full px-4 py-3 pr-12 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200"
-                    placeholder="Confirm your password"
+                    className={`w-full px-4 py-3 pr-12 bg-slate-700/50 border rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 ${
+                      error && (!confirmPassword.trim() || password !== confirmPassword) 
+                        ? 'border-red-500 focus:ring-red-500' 
+                        : 'border-slate-600 focus:ring-yellow-500'
+                    }`}
+                    placeholder="Confirm your password (required)"
                     disabled={isLoading}
                   />
                   <button

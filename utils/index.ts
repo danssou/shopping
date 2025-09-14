@@ -2,21 +2,47 @@
 export * from './formatters';
 export * from './validation';
 export * from './notifications';
+export * from './profile';
+export * from './security';
 
-// Legacy utilities (consider moving to formatters.ts)
-export const formatPrice = (price: string | number): string => {
-  const numPrice = typeof price === 'string' ? parseFloat(price) : price;
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(numPrice);
-};
+// Product utilities
+export {
+  getProductTitle,
+  getProductCategory,
+  getProductPrice,
+  getProductImage,
+  convertToCartProduct,
+  convertToWishlistItem
+} from './helpers';
 
-export const formatStock = (stock: number | null): string => {
-  if (!stock || stock <= 0) return 'Out of stock';
-  if (stock === 1) return '1 in stock';
-  return `${stock} in stock`;
-};
+// Cart utilities
+export {
+  calculateCartTotal,
+  calculateCartItemCount,
+  findCartItem
+} from './helpers';
+
+// Order utilities
+export {
+  getOrderStatusColor,
+  formatOrderStatus
+} from './helpers';
+
+// Array utilities
+export {
+  shuffleArray,
+  groupBy,
+  uniqueBy
+} from './helpers';
+
+// Storage utilities
+export { storage } from './helpers';
+
+// Date/Time utilities
+export {
+  formatDate,
+  formatTime
+} from './helpers';
 
 export const slugify = (text: string): string => {
   return text
@@ -24,9 +50,4 @@ export const slugify = (text: string): string => {
     .replace(/[^\w\s-]/g, '')
     .replace(/[\s_-]+/g, '-')
     .replace(/^-+|-+$/g, '');
-};
-
-export const truncateText = (text: string, maxLength: number): string => {
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength).trim() + '...';
 };

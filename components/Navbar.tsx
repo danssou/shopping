@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MagnifyingGlassIcon, ShoppingBagIcon, HeartIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
@@ -20,15 +20,23 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const totalItems = useCartStore(state => state.getCartCount());
+  const hasHydrated = useCartStore(state => state.hasHydrated);
+  const setHasHydrated = useCartStore(state => state.setHasHydrated);
   const { count: wishlistCount } = useWishlist();
   const { data: session, isPending } = useSession();
   const { showWelcomeNotification } = useCartPersistence();
+
+  // Handle hydration for cart store
+  useEffect(() => {
+    setHasHydrated(true);
+  }, [setHasHydrated]);
 
   const navigationItems = [
     { name: 'Men', href: '/men' },
     { name: 'Women', href: '/women' },
     { name: 'Kids', href: '/kids' },
     { name: 'Collections', href: '/collections' },
+    { name: 'Recommendations', href: '/recommendations' },
     { name: 'Contact', href: '/contact' },
   ];
 
@@ -42,7 +50,7 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <div className="flex items-center">
+            <Link href="/" className="flex items-center hover:opacity-80 transition-opacity cursor-pointer">
               <Image
                 src="/logo.svg"
                 alt="CODALWARE"
@@ -51,7 +59,7 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
                 className="h-6 w-auto brightness-0 invert"
                 priority
               />
-            </div>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
@@ -81,7 +89,7 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
               <MagnifyingGlassIcon className="h-6 w-6" />
             </button>
 
-            {/* Wishlist - Only show when authenticated */}
+            {/* Wishlist */}
             {session && (
               <Link href="/wishlist" className="relative">
                 <button 
@@ -89,7 +97,7 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
                   aria-label="Wishlist"
                 >
                   <HeartIcon className="h-6 w-6" />
-                  {wishlistCount > 0 && (
+                  {hasHydrated && wishlistCount > 0 && (
                     <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
                       {wishlistCount}
                     </span>
@@ -103,14 +111,14 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
               <button 
                 onClick={() => setIsCartOpen(true)}
                 className={`p-2 text-gray-300 hover:text-white transition-colors duration-200 ${
-                  showWelcomeNotification ? 'animate-pulse' : ''
+                  hasHydrated && showWelcomeNotification ? 'animate-pulse' : ''
                 }`}
                 aria-label="Shopping cart"
               >
                 <ShoppingBagIcon className={`h-6 w-6 ${
-                  showWelcomeNotification ? 'animate-bounce text-yellow-400' : ''
+                  hasHydrated && showWelcomeNotification ? 'animate-bounce text-yellow-400' : ''
                 }`} />
-                {totalItems > 0 && (
+                {hasHydrated && totalItems > 0 && (
                   <span className={`absolute -top-1 -right-1 bg-yellow-500 text-slate-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium ${
                     showWelcomeNotification ? 'animate-ping' : ''
                   }`}>
@@ -118,7 +126,7 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
                   </span>
                 )}
                 {/* Flashing ring effect when notification is showing */}
-                {showWelcomeNotification && (
+                {hasHydrated && showWelcomeNotification && (
                   <div className="absolute inset-0 rounded-full border-2 border-yellow-400 animate-ping opacity-75"></div>
                 )}
               </button>

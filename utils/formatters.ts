@@ -25,6 +25,15 @@ export const formatNumber = (num: number): string => {
 };
 
 /**
+ * Format stock quantity with proper messaging
+ */
+export const formatStock = (stock: number | null): string => {
+  if (!stock || stock <= 0) return 'Out of stock';
+  if (stock === 1) return '1 in stock';
+  return `${stock} in stock`;
+};
+
+/**
  * Capitalize first letter of a string
  */
 export const capitalize = (str: string): string => {

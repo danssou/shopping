@@ -22,7 +22,7 @@ import {
 type PaymentMethod = 'card' | 'paypal' | 'cash';
 
 export default function CheckoutPage() {
-  const { items, subtotal, clearCart } = useCart();
+  const { items, subtotal, clearCart, addToCart } = useCart();
   const { data: session } = useSession();
   const router = useRouter();
   
@@ -116,7 +116,7 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 py-12">
+    <div className="bg-slate-900 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">Checkout</h1>
@@ -403,6 +403,78 @@ export default function CheckoutPage() {
                 ))}
               </div>
 
+              {/* Recommendations Section */}
+              <div className="mb-6 p-4 bg-gradient-to-br from-yellow-600/10 to-orange-600/10 border border-yellow-500/20 rounded-lg">
+                <h3 className="text-sm font-semibold text-yellow-400 mb-3 flex items-center">
+                  <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                  You might also like
+                </h3>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-3 p-2 bg-slate-800/30 rounded-lg hover:bg-slate-800/50 transition-colors cursor-pointer">
+                    <Image 
+                      src="/shoes/shoe-2.webp" 
+                      alt="Classic Runner Pro" 
+                      width={32}
+                      height={32}
+                      className="w-8 h-8 object-cover rounded"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-xs font-medium text-white truncate">Classic Runner Pro</h4>
+                      <p className="text-xs text-yellow-400">$129.99</p>
+                    </div>
+                    <button 
+                      onClick={() => addToCart({
+                        id: 'classic-runner-pro',
+                        name: 'Classic Runner Pro',
+                        price: '129.99',
+                        description: 'Premium running shoes with advanced comfort technology',
+                        imageUrl: '/shoes/shoe-2.webp',
+                        category: 'Running',
+                        brand: 'CODALWARE',
+                        stock: 25,
+                        createdAt: new Date(),
+                        updatedAt: new Date()
+                      })}
+                      className="text-xs bg-yellow-500 hover:bg-yellow-400 text-slate-900 px-2 py-1 rounded font-medium transition-colors"
+                    >
+                      Add
+                    </button>
+                  </div>
+                  <div className="flex items-center space-x-3 p-2 bg-slate-800/30 rounded-lg hover:bg-slate-800/50 transition-colors cursor-pointer">
+                    <Image 
+                      src="/shoes/shoe-3.webp" 
+                      alt="Urban Comfort" 
+                      width={32}
+                      height={32}
+                      className="w-8 h-8 object-cover rounded"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-xs font-medium text-white truncate">Urban Comfort</h4>
+                      <p className="text-xs text-yellow-400">$89.99</p>
+                    </div>
+                    <button 
+                      onClick={() => addToCart({
+                        id: 'urban-comfort',
+                        name: 'Urban Comfort',
+                        price: '89.99',
+                        description: 'Stylish urban shoes with all-day comfort',
+                        imageUrl: '/shoes/shoe-3.webp',
+                        category: 'Casual',
+                        brand: 'CODALWARE',
+                        stock: 30,
+                        createdAt: new Date(),
+                        updatedAt: new Date()
+                      })}
+                      className="text-xs bg-yellow-500 hover:bg-yellow-400 text-slate-900 px-2 py-1 rounded font-medium transition-colors"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+
               <div className="border-t border-slate-700 pt-4 space-y-2">
                 <div className="flex justify-between text-slate-300">
                   <span>Subtotal</span>
@@ -430,22 +502,33 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              {/* Continue Shopping Section */}
+              {/* Continue Shopping & Recommendations Section */}
               <div className="bg-gradient-to-br from-blue-600/10 to-purple-600/10 border border-blue-500/20 rounded-lg p-4 my-6">
                 <div className="text-center">
                   <h3 className="text-white font-medium mb-2">Need something else?</h3>
-                  <p className="text-slate-300 text-sm mb-3">
+                  <p className="text-slate-300 text-sm mb-4">
                     Don&apos;t miss out on our amazing deals! Add more items to your cart.
                   </p>
-                  <Link
-                    href="/"
-                    className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-medium rounded-lg transition-all duration-200 hover:scale-105 text-sm"
-                  >
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    Continue Shopping
-                  </Link>
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                    <Link
+                      href="/"
+                      className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-medium rounded-lg transition-all duration-200 hover:scale-105 text-sm"
+                    >
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                      </svg>
+                      Continue Shopping
+                    </Link>
+                    <Link
+                      href="/recommendations"
+                      className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-500 hover:to-orange-500 text-white font-medium rounded-lg transition-all duration-200 hover:scale-105 text-sm"
+                    >
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                      </svg>
+                      Recommendations
+                    </Link>
+                  </div>
                 </div>
               </div>
 

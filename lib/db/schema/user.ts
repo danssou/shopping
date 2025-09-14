@@ -47,7 +47,34 @@ export const user = pgTable('user', {
       profileVisibility: 'public' | 'private';
       showEmail: boolean;
     };
+    activeCoupon?: {
+      code: string;
+      discount: number;
+      type: 'percentage' | 'fixed' | 'free_shipping';
+      description: string;
+      appliedAt: string;
+    };
   }>().default({}),
+  // Shopping cart
+  cart: jsonb('cart').$type<Array<{
+    id: string;
+    productId: string;
+    name: string;
+    price: number;
+    quantity: number;
+    imageUrl?: string;
+    size?: string;
+    color?: string;
+  }>>().default([]),
+  // Wishlist
+  wishlist: jsonb('wishlist').$type<Array<{
+    id: string;
+    productId: string;
+    name: string;
+    price: number;
+    imageUrl?: string;
+    addedAt: string;
+  }>>().default([]),
   createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`).notNull(),
   updatedAt: timestamp('updated_at').default(sql`CURRENT_TIMESTAMP`).notNull(),
 });

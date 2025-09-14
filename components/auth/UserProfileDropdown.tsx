@@ -119,12 +119,12 @@ export default function UserProfileDropdown({ className = '' }: UserProfileDropd
               Order History
             </Link>
             <Link
-              href="/favorites"
+              href="/wishlist"
               className="flex items-center px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition-colors duration-200"
               onClick={() => setIsDropdownOpen(false)}
             >
               <HeartIcon className="h-4 w-4 mr-3" />
-              Favorites
+              Wishlist
             </Link>
           </div>
 

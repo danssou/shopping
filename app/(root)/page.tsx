@@ -2,6 +2,7 @@
 
 import { useEffect, useCallback, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useStore } from '@/lib/store';
 import { useCart, useWishlist, convertToCartProduct, convertToWishlistItem, convertConstantToCartProduct, convertConstantToWishlistItem } from '@/hooks/useStore';
 import { useSession } from '@/lib/auth-client';
@@ -98,18 +99,6 @@ const Home = () => {
     );
   };
 
-  // Direct test of cart notification
-  const testCartNotification = () => {
-    success(
-      'Welcome back!',
-      'Your cart has been restored with 3 items',
-      {
-        icon: ShoppingBagIcon,
-        duration: 5000
-      }
-    );
-  };
-
   const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
@@ -117,18 +106,59 @@ const Home = () => {
       
       const response = await fetch('/api/products');
       if (!response.ok) {
-        throw new Error('Failed to fetch products');
+        throw new Error('Failed to fetch products from database');
       }
       
       const data: Product[] = await response.json();
-      setProducts(data);
+      
+      // If no products in database, use featured products as fallback
+      if (!data || data.length === 0) {
+        console.log('No products in database, using featured products as fallback');
+        const fallbackProducts: Product[] = FEATURED_PRODUCTS.map(product => ({
+          id: product.id,
+          name: product.title,
+          description: `${product.category} - Available in ${product.colors} colors`,
+          price: product.price,
+          imageUrl: product.image || null,
+          category: product.category || null,
+          brand: 'CODALWARE',
+          stock: 100,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }));
+        setProducts(fallbackProducts);
+      } else {
+        setProducts(data);
+      }
     } catch (error) {
       console.error('Error fetching products:', error);
-      setError(error instanceof Error ? error.message : 'Failed to fetch products');
+      console.log('Using featured products as fallback due to API error');
+      
+      // Use featured products as fallback when API fails
+      const fallbackProducts: Product[] = FEATURED_PRODUCTS.map(product => ({
+        id: product.id,
+        name: product.title,
+        description: `${product.category} - Available in ${product.colors} colors`,
+        price: product.price,
+        imageUrl: product.image || null,
+        category: product.category || null,
+        brand: 'CODALWARE',
+        stock: 100,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }));
+      setProducts(fallbackProducts);
+      
+      // Show a warning instead of an error since we have fallback data
+      warning(
+        'Database Connection Issue',
+        'Using cached product data. Some features may be limited.',
+        { duration: 5000 }
+      );
     } finally {
       setLoading(false);
     }
-  }, [setProducts, setLoading, setError]);
+  }, [setProducts, setLoading, setError, warning]);
 
   useEffect(() => {
     fetchProducts();
@@ -164,83 +194,157 @@ const Home = () => {
   return (
     <div className="font-jost min-h-screen bg-slate-900">
       
-      {/* Hero Section with Local Images */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+      {/* Modern Hero Section with Industry Standards */}
+      <section className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 min-h-[80vh] lg:min-h-[90vh] flex items-center overflow-hidden">
+        {/* Subtle Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(120,119,198,0.4)_0%,transparent_50%)]"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(236,72,153,0.4)_0%,transparent_50%)]"></div>
+        </div>
+
+        {/* Background Image with Modern Overlay */}
         <div className="absolute inset-0">
           <Image
             src="/hero-bg.png"
             alt="CODALWARE Hero Background"
             fill
-            className="object-cover opacity-30"
+            className="object-cover opacity-20"
             priority
           />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/80 via-slate-900/40 to-slate-900/80"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/20 to-slate-900/60"></div>
         </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="flex flex-col lg:flex-row items-center justify-between">
-            <div className="lg:w-1/2 text-white mb-12 lg:mb-0">
-              <h1 className="text-5xl lg:text-6xl font-bold mb-6">
-                Premium
-                <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent"> Technology</span>
-              </h1>
-              <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-                Discover CODALWARE&apos;s cutting-edge products and innovative solutions. Quality crafted for the digital future.
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <button className="bg-white text-gray-900 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors duration-200 shadow-lg">
-                  Shop Now
+
+        {/* Modern Hero Content */}
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 h-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center h-full min-h-[inherit]">
+            
+            {/* Content Column */}
+            <div className="text-center lg:text-left space-y-8 lg:space-y-10">
+              {/* Brand Badge */}
+              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
+                <div className="w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full animate-pulse"></div>
+                <span className="text-sm font-medium text-white/90">New Collection 2024</span>
+              </div>
+
+              {/* Main Heading */}
+              <div className="space-y-4">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
+                  <span className="block text-white">Step Into</span>
+                  <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                    Tomorrow
+                  </span>
+                </h1>
+                <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                  Discover our premium collection of athletic footwear designed for performance, 
+                  comfort, and style. Every step counts.
+                </p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <Link 
+                  href="/products" 
+                  className="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-xl shadow-lg"
+                >
+                  <span>Shop Now</span>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </Link>
+                <button className="inline-flex items-center justify-center gap-3 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white font-semibold px-8 py-4 rounded-full border border-white/20 hover:border-white/40 transition-all duration-300">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1.5a1.5 1.5 0 001.5-1.5V7a3 3 0 113 3v1.5a1.5 1.5 0 001.5 1.5H18m-3-7a3 3 0 11-6 0m6 0a3 3 0 11-6 0m6 0a3 3 0 11-6 0" />
+                  </svg>
+                  <span>Watch Video</span>
                 </button>
-                
-                {/* Notification Test Buttons */}
-                <div className="flex flex-wrap gap-2">
-                  <button 
-                    onClick={testSuccessNotification}
-                    className="bg-emerald-500 text-white px-3 py-2 rounded-lg font-medium text-sm hover:bg-emerald-600 transition-colors duration-200 shadow-lg"
-                  >
-                    ✅ Success
-                  </button>
-                  <button 
-                    onClick={testErrorNotification}
-                    className="bg-red-500 text-white px-3 py-2 rounded-lg font-medium text-sm hover:bg-red-600 transition-colors duration-200 shadow-lg"
-                  >
-                    ❌ Error
-                  </button>
-                  <button 
-                    onClick={testWarningNotification}
-                    className="bg-amber-500 text-white px-3 py-2 rounded-lg font-medium text-sm hover:bg-amber-600 transition-colors duration-200 shadow-lg"
-                  >
-                    ⚠️ Warning
-                  </button>
-                  <button 
-                    onClick={testInfoNotification}
-                    className="bg-blue-500 text-white px-3 py-2 rounded-lg font-medium text-sm hover:bg-blue-600 transition-colors duration-200 shadow-lg"
-                  >
-                    ℹ️ Info
-                  </button>
+              </div>
+
+              {/* Stats */}
+              <div className="flex flex-wrap gap-8 justify-center lg:justify-start pt-8 border-t border-white/10">
+                <div className="text-center lg:text-left">
+                  <div className="text-2xl lg:text-3xl font-bold text-white">10K+</div>
+                  <div className="text-sm text-gray-400">Happy Customers</div>
                 </div>
-                
+                <div className="text-center lg:text-left">
+                  <div className="text-2xl lg:text-3xl font-bold text-white">500+</div>
+                  <div className="text-sm text-gray-400">Products</div>
+                </div>
+                <div className="text-center lg:text-left">
+                  <div className="text-2xl lg:text-3xl font-bold text-white">4.9★</div>
+                  <div className="text-sm text-gray-400">Rating</div>
+                </div>
+              </div>
+
+              {/* Hidden Development Test Buttons */}
+              <div className="hidden xl:flex flex-wrap gap-2 mt-4 opacity-50 hover:opacity-100 transition-opacity justify-center lg:justify-start">
+                <button 
+                  onClick={testSuccessNotification}
+                  className="bg-emerald-500/80 text-white px-3 py-1 rounded-lg font-medium text-xs hover:bg-emerald-600 transition-colors duration-200 shadow-lg backdrop-blur-sm"
+                >
+                  ✅ Success
+                </button>
+                <button 
+                  onClick={testErrorNotification}
+                  className="bg-red-500/80 text-white px-3 py-1 rounded-lg font-medium text-xs hover:bg-red-600 transition-colors duration-200 shadow-lg backdrop-blur-sm"
+                >
+                  ❌ Error
+                </button>
+                <button 
+                  onClick={testWarningNotification}
+                  className="bg-amber-500/80 text-white px-3 py-1 rounded-lg font-medium text-xs hover:bg-amber-600 transition-colors duration-200 shadow-lg backdrop-blur-sm"
+                >
+                  ⚠️ Warning
+                </button>
+                <button 
+                  onClick={testInfoNotification}
+                  className="bg-blue-500/80 text-white px-3 py-1 rounded-lg font-medium text-xs hover:bg-blue-600 transition-colors duration-200 shadow-lg backdrop-blur-sm"
+                >
+                  ℹ️ Info
+                </button>
                 <button 
                   onClick={testCartRestoration}
-                  className="bg-purple-500 text-white px-4 py-3 rounded-lg font-semibold text-sm hover:bg-purple-600 transition-colors duration-200 shadow-lg"
+                  className="bg-purple-500/80 text-white px-3 py-1 rounded-lg font-medium text-xs hover:bg-purple-600 transition-colors duration-200 shadow-lg backdrop-blur-sm"
                 >
-                  Setup Cart Test
-                </button>
-                <button 
-                  onClick={testCartNotification}
-                  className="bg-indigo-500 text-white px-4 py-3 rounded-lg font-semibold text-sm hover:bg-indigo-600 transition-colors duration-200 shadow-lg"
-                >
-                  Cart Welcome Demo
+                  🛒 Cart
                 </button>
               </div>
             </div>
-            <div className="lg:w-1/2 flex justify-center">
-              <Image
-                src="/hero-shoe.png"
-                alt="Featured CODALWARE Product"
-                width={500}
-                height={400}
-                className="max-w-md lg:max-w-lg xl:max-w-xl"
-                priority
-              />
+
+            {/* Visual Column */}
+            <div className="relative flex items-center justify-center lg:justify-end">
+              <div className="relative">
+                {/* Hero Shoe with Modern Animation */}
+                <div className="relative z-10 transform hover:scale-105 transition-transform duration-700">
+                  <Image
+                    src="/hero-shoe.png"
+                    alt="Premium Athletic Shoe"
+                    width={600}
+                    height={400}
+                    className="w-full max-w-lg h-auto drop-shadow-2xl"
+                    priority
+                  />
+                </div>
+                
+                {/* Floating Elements - Responsive positioning */}
+                <div className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 lg:-top-8 lg:-right-8 w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-xl animate-pulse z-20"></div>
+                <div className="absolute -bottom-6 -left-6 sm:-bottom-8 sm:-left-8 lg:-bottom-12 lg:-left-12 w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-full blur-2xl animate-pulse delay-1000 z-20"></div>
+                
+                {/* Product Highlight Cards - Responsive positioning */}
+                <div className="absolute top-4 -left-4 sm:top-6 sm:-left-6 lg:top-8 lg:-left-8 bg-white/10 backdrop-blur-sm rounded-xl lg:rounded-2xl p-3 lg:p-4 border border-white/20 animate-float z-30">
+                  <div className="flex items-center gap-2 lg:gap-3">
+                    <div className="w-2 h-2 lg:w-3 lg:h-3 bg-green-400 rounded-full"></div>
+                    <span className="text-white font-medium text-xs lg:text-sm">Premium Quality</span>
+                  </div>
+                </div>
+                
+                <div className="absolute top-8 -right-8 sm:top-12 sm:-right-10 lg:top-16 lg:-right-12 bg-white/10 backdrop-blur-sm rounded-xl lg:rounded-2xl p-3 lg:p-4 border border-white/20 animate-float delay-500 z-30">
+                  <div className="text-center">
+                    <div className="text-white font-bold text-base lg:text-lg">$149</div>
+                    <div className="text-gray-300 text-xs lg:text-sm">Limited Offer</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

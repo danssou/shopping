@@ -40,6 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Markdown files (except README)
+*.md
+!README.md
 
 # Note
 *.txt

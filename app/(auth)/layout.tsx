@@ -1,6 +1,7 @@
 'use client';
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import { CAROUSEL_SLIDES, CAROUSEL_CONFIG } from "@/constants";
@@ -92,15 +93,17 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
         <div className="flex flex-col justify-between p-12 text-white z-10 relative">
           {/* Logo */}
           <div className="flex items-center space-x-3">
-            <Image
-              src="/logo.svg"
-              alt="CODALWARE"
-              width={40}
-              height={16}
-              className="brightness-0 invert"
-              priority
-            />
-            <span className="text-xl font-semibold">CODALWARE</span>
+            <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+              <Image
+                src="/logo.svg"
+                alt="CODALWARE"
+                width={40}
+                height={16}
+                className="brightness-0 invert"
+                priority
+              />
+              <span className="text-xl font-semibold">CODALWARE</span>
+            </Link>
           </div>
           
           {/* Carousel Content */}

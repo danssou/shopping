@@ -16,23 +16,51 @@ export const useCartPersistence = () => {
   const { items, clearCart } = useCartStore();
   const { success } = useNotifications();
   const [showWelcomeNotification, setShowWelcomeNotification] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
+  const [hasShownWelcome, setHasShownWelcome] = useState(false);
   
+  // Prevent hydration mismatch
   useEffect(() => {
-    const prevAuthState = localStorage.getItem('auth-state') || 'guest'; // Default to 'guest' if not set
-    const prevUserId = localStorage.getItem('prev-user-id');
-    const currentAuthState = session ? 'authenticated' : 'guest';
+    setIsHydrated(true);
+    // Clear welcome tracking on page load/refresh to ensure it only shows on actual sign-in
+    const welcomeShownFor = localStorage.getItem('welcome-shown-for');
     const currentUserId = session?.user?.id || null;
     
-    console.log('Auth state change:', { 
+    // If there's a welcome tracking but user is currently signed in, clear it
+    // This prevents the message from showing again on page refreshes
+    if (welcomeShownFor && currentUserId && welcomeShownFor === currentUserId) {
+      setHasShownWelcome(true);
+    }
+  }, [session?.user?.id]);
+  
+  useEffect(() => {
+    if (!isHydrated) return;
+    
+    const currentUserId = session?.user?.id || null;
+    const currentAuthState = session ? 'authenticated' : 'guest';
+    const prevAuthState = localStorage.getItem('auth-state') || 'guest';
+    const prevUserId = localStorage.getItem('prev-user-id');
+    const welcomeShownFor = localStorage.getItem('welcome-shown-for');
+    
+    console.log('Auth state check:', { 
       prevAuthState, 
       currentAuthState, 
       prevUserId, 
       currentUserId,
-      signInCondition: (prevAuthState === 'guest' || prevAuthState === null) && currentAuthState === 'authenticated' && currentUserId
+      welcomeShownFor,
+      hasShownWelcome
     });
     
-    // If user just signed in (was guest or new user, now authenticated)
-    if ((prevAuthState === 'guest' || prevAuthState === null) && currentAuthState === 'authenticated' && currentUserId) {
+    // Only show welcome if this is an actual sign-in event, not just a page load
+    const isActualSignIn = (
+      (prevAuthState === 'guest' || !prevAuthState) && 
+      currentAuthState === 'authenticated' && 
+      currentUserId &&
+      welcomeShownFor !== currentUserId &&
+      !hasShownWelcome
+    );
+    
+    if (isActualSignIn) {
       console.log('User just signed in - processing cart restoration...');
       
       // Save current guest cart items to user's account
@@ -60,7 +88,7 @@ export const useCartPersistence = () => {
             // Show modular notification instead of custom component
             success(
               'Welcome back!',
-              `Your cart has been restored with ${savedItems.length} item${savedItems.length !== 1 ? 's' : ''}`,
+              `You have ${savedItems.length} item${savedItems.length !== 1 ? 's' : ''} waiting just for you`,
               {
                 icon: ShoppingBagIcon,
                 duration: 5000
@@ -70,6 +98,10 @@ export const useCartPersistence = () => {
             setShowWelcomeNotification(true);
             setTimeout(() => setShowWelcomeNotification(false), 5000);
           }
+          
+          // Mark that we've shown the welcome for this user in this session
+          localStorage.setItem('welcome-shown-for', currentUserId);
+          setHasShownWelcome(true);
         } catch (error) {
           console.error('Error restoring user cart:', error);
         }
@@ -83,6 +115,9 @@ export const useCartPersistence = () => {
         localStorage.setItem(`user-cart-${prevUserId}`, JSON.stringify(items));
       }
       clearCart();
+      // Clear welcome tracking so it can show again on next sign-in
+      localStorage.removeItem('welcome-shown-for');
+      setHasShownWelcome(false);
       console.log('User signed out - cart saved and cleared');
     }
     
@@ -127,7 +162,7 @@ export const useCartPersistence = () => {
       localStorage.setItem('prev-user-id', currentUserId);
     }
     
-  }, [session, items, clearCart, success]);
+  }, [session, items, clearCart, success, isHydrated, hasShownWelcome]);
 
   // Save cart periodically for authenticated users
   useEffect(() => {
@@ -143,7 +178,7 @@ export const useCartPersistence = () => {
   return {
     isAuthenticated: !!session,
     session,
-    showWelcomeNotification,
+    showWelcomeNotification: isHydrated && showWelcomeNotification,
     hideNotification: () => setShowWelcomeNotification(false)
   };
 };
