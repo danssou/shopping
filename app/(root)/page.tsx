@@ -194,60 +194,61 @@ const Home = () => {
   return (
     <div className="font-jost min-h-screen bg-slate-900">
       
-      {/* Modern Hero Section with Industry Standards */}
-      <section className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 min-h-[80vh] lg:min-h-[90vh] flex items-center overflow-hidden">
-        {/* Subtle Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(120,119,198,0.4)_0%,transparent_50%)]"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(236,72,153,0.4)_0%,transparent_50%)]"></div>
-        </div>
-
-        {/* Background Image with Modern Overlay */}
+      {/* Hero Section */}
+      <section className="relative min-h-[85vh] lg:min-h-[95vh] flex items-center overflow-hidden">
+        {/* Background Image */}
         <div className="absolute inset-0">
           <Image
             src="/hero-bg.png"
             alt="CODALWARE Hero Background"
             fill
-            className="object-cover opacity-20"
+            className="object-cover opacity-15"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/80 via-slate-900/40 to-slate-900/80"></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/20 to-slate-900/60"></div>
+          <div className="absolute inset-0 bg-slate-900/80"></div>
         </div>
 
-        {/* Modern Hero Content */}
-        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 h-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center h-full min-h-[inherit]">
+        {/* Hero Content Container */}
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             
-            {/* Content Column */}
-            <div className="text-center lg:text-left space-y-8 lg:space-y-10">
-              {/* Brand Badge */}
-              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
-                <div className="w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full animate-pulse"></div>
-                <span className="text-sm font-medium text-white/90">New Collection 2024</span>
+            {/* Content Column - Enhanced */}
+            <div className="text-center lg:text-left space-y-6 lg:space-y-8">
+              {/* Premium Brand Badge */}
+              <div className="inline-flex items-center gap-3 bg-yellow-500/20 backdrop-blur-md rounded-full px-6 py-3 border border-yellow-500/30 shadow-lg">
+                <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+                <span className="text-sm font-semibold text-yellow-300 tracking-wide">Premium Collection 2025</span>
               </div>
 
-              {/* Main Heading */}
-              <div className="space-y-4">
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
-                  <span className="block text-white">Step Into</span>
-                  <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                    Tomorrow
+              {/* Enhanced Main Heading */}
+              <div className="space-y-4 lg:space-y-6">
+                <h1 style={{ 
+                  fontSize: 'var(--text-heading-1)', 
+                  lineHeight: 'var(--text-heading-1--line-height)', 
+                  fontWeight: 'var(--text-heading-1--font-weight)' 
+                }} className="font-bold">
+                  <span className="block text-white drop-shadow-lg">Step Into</span>
+                  <span className="block text-yellow-400">
+                    Excellence
                   </span>
                 </h1>
-                <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                <p style={{ 
+                  fontSize: 'var(--text-lead)', 
+                  lineHeight: 'var(--text-lead--line-height)' 
+                }} className="text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
                   Discover our premium collection of athletic footwear designed for performance, 
-                  comfort, and style. Every step counts.
+                  comfort, and unmatched style. Every step towards greatness.
                 </p>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              {/* Enhanced Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
                 <Link 
                   href="/products" 
-                  className="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-xl shadow-lg"
+                  className="group inline-flex items-center justify-center gap-3 bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-bold px-8 py-4 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg"
                 >
-                  <span>Shop Now</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+                  <span className="relative z-10">Shop Now</span>
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
@@ -350,39 +351,56 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Featured Products Section using new Card component */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="mb-12 text-center">
-          <h2 
-            className="text-white font-bold mb-4 text-center text-heading-1"
-          >
-            Featured Products
-          </h2>
-          <p 
-            className="text-gray-300 text-center max-w-2xl mx-auto text-body "
-          >
-            Discover our latest collection of premium products
-          </p>
+      {/* Enhanced Featured Products Section */}
+      <section className="relative py-20 lg:py-24">
+        {/* Background Elements */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/50 to-slate-900/50"></div>
+        <div className="absolute inset-0">
+          <div className="absolute top-1/3 left-1/6 w-72 h-72 bg-gradient-to-r from-yellow-500/10 to-blue-500/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-1/3 right-1/6 w-80 h-80 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full blur-3xl"></div>
         </div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-16 text-center">
+            <div className="inline-flex items-center gap-2 bg-yellow-500/20 backdrop-blur-sm rounded-full px-6 py-2 border border-yellow-500/30 mb-6">
+              <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+              <span className="text-sm font-semibold text-yellow-300">Featured Collection</span>
+            </div>
+            
+            <h2 style={{ 
+              fontSize: 'var(--text-heading-2)', 
+              lineHeight: 'var(--text-heading-2--line-height)', 
+              fontWeight: 'var(--text-heading-2--font-weight)' 
+            }} className="text-white font-bold mb-6">
+              Premium Selection
+            </h2>
+            <p style={{ 
+              fontSize: 'var(--text-lead)', 
+              lineHeight: 'var(--text-lead--line-height)' 
+            }} className="text-slate-300 max-w-3xl mx-auto">
+              Handpicked products that combine cutting-edge technology with timeless design. 
+              Discover excellence in every detail.
+            </p>
+          </div>
 
-        {/* Demo Cards using new Card component */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-16">
-          {FEATURED_PRODUCTS.map((product) => (
-            <Card
-              key={product.id}
-              id={product.id}
-              title={product.title}
-              category={product.category}
-              price={product.price}
-              originalPrice={product.originalPrice}
-              image={product.image}
-              colors={product.colors}
-              isBestSeller={product.isBestSeller}
-              onAddToCart={(id) => {
-                const productData = FEATURED_PRODUCTS.find(p => p.id === id);
-                if (productData) {
-                  const cartProduct = convertConstantToCartProduct(productData);
-                  addToCart(cartProduct);
+          {/* Enhanced Product Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 mb-16">
+            {FEATURED_PRODUCTS.map((product) => (
+              <Card
+                key={product.id}
+                id={product.id}
+                title={product.title}
+                category={product.category}
+                price={product.price}
+                originalPrice={product.originalPrice}
+                image={product.image}
+                colors={product.colors}
+                isBestSeller={product.isBestSeller}
+                onAddToCart={(id) => {
+                  const productData = FEATURED_PRODUCTS.find(p => p.id === id);
+                  if (productData) {
+                    const cartProduct = convertConstantToCartProduct(productData);
+                    addToCart(cartProduct);
                 }
               }}
               onToggleWishlist={(id) => {
@@ -399,65 +417,75 @@ const Home = () => {
               }}
             />
           ))}
+          </div>
         </div>
+      </section>
 
-        {/* Database Products */}
-        {loading && <Loading />}
-        
-        {storeError && (
-          <ErrorCard error={storeError} onRetry={fetchProducts} />
-        )}
+      {/* Enhanced Database Products Section */}
+      <section className="relative py-16 lg:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Database Products */}
+          {loading && <Loading />}
+          
+          {storeError && (
+            <ErrorCard error={storeError} onRetry={fetchProducts} />
+          )}
 
-        {!loading && !error && (
-          <>
-            {products.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="bg-gray-800 rounded-md p-8 max-w-md mx-auto">
-                  <h3 className="text-xl font-semibold text-gray-200 mb-2">No products found</h3>
-                  <p className="text-gray-400">Check back later for new arrivals!</p>
+          {!loading && !error && (
+            <>
+              {products.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm rounded-2xl p-8 max-w-md mx-auto border border-slate-600/30">
+                    <h3 className="text-xl font-semibold text-white mb-2">No products found</h3>
+                    <p className="text-slate-400">Check back later for new arrivals!</p>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <>
-                <div className="mb-8">
-                  <h3 className="text-2xl font-bold text-white mb-4">All Products</h3>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                  {products.map((product) => (
-                    <Card
-                      key={product.id}
-                      id={product.id}
-                      title={product.name}
-                      category={product.category || 'Shoes'}
-                      price={`$${product.price}`}
-                      image={product.imageUrl || '/shoes/shoe-1.jpg'}
-                      colors={3}
-                      onAddToCart={(id) => {
-                        const productData = products.find(p => p.id === id);
-                        if (productData) {
-                          const cartProduct = convertToCartProduct(productData as unknown as Record<string, unknown>);
-                          addToCart(cartProduct);
-                        }
-                      }}
-                      onToggleWishlist={(id) => {
-                        if (!session) {
-                          setPendingWishlistAction({ id, type: 'product' });
-                          setShowSignInModal(true);
-                          return;
-                        }
-                        const productData = products.find(p => p.id === id);
-                        if (productData) {
-                          const wishlistItem = convertToWishlistItem(productData as unknown as Record<string, unknown>);
-                          toggleWishlist(wishlistItem);
-                        }
-                      }}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
-          </>
-        )}
+              ) : (
+                <>
+                  <div className="mb-12 text-center">
+                    <h3 style={{ 
+                      fontSize: 'var(--text-heading-2)', 
+                      lineHeight: 'var(--text-heading-2--line-height)' 
+                    }} className="text-white font-bold mb-4">All Products</h3>
+                    <p className="text-slate-400">Explore our complete collection</p>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
+                    {products.map((product) => (
+                      <Card
+                        key={product.id}
+                        id={product.id}
+                        title={product.name}
+                        category={product.category || 'Shoes'}
+                        price={`$${product.price}`}
+                        image={product.imageUrl || '/shoes/shoe-1.jpg'}
+                        colors={3}
+                        onAddToCart={(id) => {
+                          const productData = products.find(p => p.id === id);
+                          if (productData) {
+                            const cartProduct = convertToCartProduct(productData as unknown as Record<string, unknown>);
+                            addToCart(cartProduct);
+                          }
+                        }}
+                        onToggleWishlist={(id) => {
+                          if (!session) {
+                            setPendingWishlistAction({ id, type: 'product' });
+                            setShowSignInModal(true);
+                            return;
+                          }
+                          const productData = products.find(p => p.id === id);
+                          if (productData) {
+                            const wishlistItem = convertToWishlistItem(productData as unknown as Record<string, unknown>);
+                            toggleWishlist(wishlistItem);
+                          }
+                        }}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            </>
+          )}
+        </div>
       </section>
       
       {/* Sign In Modal */}

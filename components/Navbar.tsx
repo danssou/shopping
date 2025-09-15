@@ -45,18 +45,18 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
   };
 
   return (
-    <nav className={`bg-slate-800 border-b border-slate-700 sticky top-0 z-50 ${className}`}>
+    <nav className={`bg-gradient-to-r from-slate-900/95 via-slate-800/95 to-slate-900/95 backdrop-blur-md border-b border-slate-700/50 sticky top-0 z-50 ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link href="/" className="flex items-center hover:opacity-80 transition-opacity cursor-pointer">
+            <Link href="/" className="flex items-center hover:opacity-80 transition-all duration-300 group">
               <Image
                 src="/logo.svg"
                 alt="CODALWARE"
                 width={60}
                 height={24}
-                className="h-6 w-auto brightness-0 invert"
+                className="h-6 w-auto brightness-0 invert group-hover:brightness-100 group-hover:invert-0 transition-all duration-300"
                 priority
               />
             </Link>
@@ -69,11 +69,11 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-gray-300 hover:text-white px-3 py-2 font-medium transition-colors duration-200 relative group"
+                  className="text-slate-200 hover:text-yellow-400 px-3 py-2 font-medium transition-all duration-300 relative group"
                   style={{ fontSize: 'var(--text-body)', lineHeight: 'var(--text-body--line-height)' }}
                 >
                   {item.name}
-                  <span className="absolute inset-x-0 bottom-0 h-0.5 bg-yellow-400 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-center"></span>
+                  <span className="absolute inset-x-0 bottom-0 h-0.5 bg-yellow-400 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center"></span>
                 </a>
               ))}
             </div>
@@ -83,7 +83,7 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
           <div className="flex items-center space-x-4">
             {/* Search Icon */}
             <button 
-              className="p-2 text-gray-300 hover:text-white transition-colors duration-200"
+              className="p-2 text-slate-200 hover:text-yellow-400 transition-all duration-300 hover:scale-110"
               aria-label="Search"
             >
               <MagnifyingGlassIcon className="h-6 w-6" />
@@ -91,14 +91,14 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
 
             {/* Wishlist */}
             {session && (
-              <Link href="/wishlist" className="relative">
+              <Link href="/wishlist" className="relative group">
                 <button 
-                  className="p-2 text-gray-300 hover:text-white transition-colors duration-200"
+                  className="p-2 text-slate-200 hover:text-yellow-400 transition-all duration-300 hover:scale-110"
                   aria-label="Wishlist"
                 >
                   <HeartIcon className="h-6 w-6" />
                   {hasHydrated && wishlistCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                    <span className="absolute -top-1 -right-1 bg-yellow-300 text-slate-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold shadow border border-yellow-400/30">
                       {wishlistCount}
                     </span>
                   )}
@@ -110,7 +110,7 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
             <div className="relative">
               <button 
                 onClick={() => setIsCartOpen(true)}
-                className={`p-2 text-gray-300 hover:text-white transition-colors duration-200 ${
+                className={`p-2 text-slate-200 hover:text-yellow-400 transition-all duration-300 hover:scale-110 ${
                   hasHydrated && showWelcomeNotification ? 'animate-pulse' : ''
                 }`}
                 aria-label="Shopping cart"
@@ -119,7 +119,7 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
                   hasHydrated && showWelcomeNotification ? 'animate-bounce text-yellow-400' : ''
                 }`} />
                 {hasHydrated && totalItems > 0 && (
-                  <span className={`absolute -top-1 -right-1 bg-yellow-500 text-slate-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium ${
+                  <span className={`absolute -top-1 -right-1 bg-yellow-300 text-slate-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold shadow border border-yellow-400/30 ${
                     showWelcomeNotification ? 'animate-ping' : ''
                   }`}>
                     {totalItems}
@@ -127,7 +127,7 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
                 )}
                 {/* Flashing ring effect when notification is showing */}
                 {hasHydrated && showWelcomeNotification && (
-                  <div className="absolute inset-0 rounded-full border-2 border-yellow-400 animate-ping opacity-75"></div>
+                  <div className="absolute inset-0 rounded-full border-2 border-yellow-300/40 animate-ping opacity-20 scale-105 blur-sm"></div>
                 )}
               </button>
             </div>
@@ -143,13 +143,13 @@ export const Navbar = ({ className = '' }: NavbarProps) => {
               <div className="hidden md:flex items-center space-x-2">
                 <Link 
                   href="/sign-in"
-                  className="px-3 py-2 text-gray-300 hover:text-white transition-colors duration-200"
+                  className="px-4 py-2 text-slate-200 hover:text-yellow-400 transition-all duration-300 font-medium"
                 >
                   Sign In
                 </Link>
                 <Link 
                   href="/sign-up"
-                  className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-medium rounded-lg transition-colors duration-200"
+                  className="px-4 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-slate-900 font-bold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
                 >
                   Sign Up
                 </Link>

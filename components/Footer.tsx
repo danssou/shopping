@@ -69,32 +69,32 @@ export const Footer = () => {
   ];
 
   return (
-    <footer className="bg-slate-900 text-white">
+    <footer className="bg-slate-900 text-white relative overflow-hidden">
       {/* Subtle top border */}
-      <hr className="border-slate-700/30 border-t-[0.5px]" />
+      <div className="relative border-t border-slate-700/30"></div>
       
       {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-6 lg:gap-12">
           {/* Logo and Location - Full width on mobile, centered; original layout on larger screens */}
           <div className="text-center md:text-left md:col-span-2 lg:col-span-2 mb-8 md:mb-0">
             <div className="mb-6 lg:mb-8 flex justify-center md:justify-start">
-              <Link href="/" className="hover:opacity-80 transition-opacity">
+              <Link href="/" className="hover:opacity-80 transition-all duration-300 group">
                 <Image
                   src="/logo.svg"
                   alt="CODALWARE"
                   width={80}
                   height={32}
-                  className="h-6 lg:h-8 w-auto brightness-0 invert"
+                  className="h-6 lg:h-8 w-auto brightness-0 invert group-hover:scale-105 transition-transform duration-300"
                 />
               </Link>
             </div>
             
             {/* Location */}
             <div className="flex items-start space-x-3 mb-6 lg:mb-8 justify-center md:justify-start">
-              <MapPinIcon className="h-5 w-5 text-yellow-400 flex-shrink-0 mt-1" />
+              <MapPinIcon className="h-5 w-5 text-yellow-400 flex-shrink-0 mt-1 animate-pulse" />
               <div>
-                <p className="text-gray-300 text-sm lg:text-base">
+                <p className="text-gray-300 text-sm lg:text-base font-medium">
                   Lomé, Togo
                 </p>
                 <p className="text-gray-400 text-xs lg:text-sm mt-1">
@@ -109,7 +109,7 @@ export const Footer = () => {
                 <a
                   key={social.name}
                   href={social.href}
-                  className="w-10 h-10 lg:w-12 lg:h-12 bg-slate-800 hover:bg-yellow-500 rounded-full flex items-center justify-center transition-all duration-300 group hover:scale-110"
+                  className="w-10 h-10 lg:w-12 lg:h-12 bg-slate-800/50 hover:bg-yellow-500 rounded-full flex items-center justify-center transition-all duration-300 group hover:scale-110 backdrop-blur-sm border border-slate-700/30 hover:border-yellow-400/50"
                   aria-label={social.name}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -129,8 +129,8 @@ export const Footer = () => {
           {/* Mobile: 2-column grid for navigation sections */}
           <div className="grid grid-cols-2 gap-6 md:hidden">
             {footerSections.map((section) => (
-              <div key={section.title}>
-                <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider text-center">
+              <div key={section.title} className="relative p-4 rounded-lg bg-slate-800/20 backdrop-blur-sm border border-slate-700/20">
+                <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-center text-yellow-400">
                   {section.title}
                 </h3>
                 <ul className="space-y-2 text-center">
@@ -138,7 +138,7 @@ export const Footer = () => {
                     <li key={link.name}>
                       <a
                         href={link.href}
-                        className="text-gray-400 hover:text-yellow-400 transition-all duration-200 text-sm block py-1"
+                        className="text-gray-400 hover:text-yellow-400 transition-all duration-200 text-sm block py-1 hover:translate-x-1 transform"
                       >
                         {link.name}
                       </a>
@@ -152,7 +152,7 @@ export const Footer = () => {
           {/* Medium+ devices: Original layout */}
           {footerSections.map((section) => (
             <div key={`desktop-${section.title}`} className="hidden md:block lg:col-span-1">
-              <h3 className="text-white font-semibold mb-4 lg:mb-6 text-sm lg:text-base uppercase tracking-wider">
+              <h3 className="font-semibold mb-4 lg:mb-6 text-sm lg:text-base uppercase tracking-wider text-yellow-400">
                 {section.title}
               </h3>
               <ul className="space-y-2 lg:space-y-3">
@@ -160,9 +160,11 @@ export const Footer = () => {
                   <li key={link.name}>
                     <a
                       href={link.href}
-                      className="text-gray-400 hover:text-yellow-400 transition-all duration-200 text-sm lg:text-base block py-1 hover:translate-x-1 transform"
+                      className="text-gray-400 hover:text-yellow-400 transition-all duration-200 text-sm lg:text-base block py-1 hover:translate-x-1 transform group"
                     >
-                      {link.name}
+                      <span className="group-hover:text-yellow-400 transition-all duration-200">
+                        {link.name}
+                      </span>
                     </a>
                   </li>
                 ))}
@@ -173,12 +175,12 @@ export const Footer = () => {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-slate-700/50 bg-slate-950/50">
+  <div className="relative border-t border-slate-700/50 bg-slate-950/80 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 lg:py-6">
           <div className="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
             {/* Copyright */}
             <div className="flex items-center text-gray-400 text-xs lg:text-sm">
-              <MapPinIcon className="h-3 w-3 lg:h-4 lg:w-4 mr-2 text-yellow-400" />
+              <MapPinIcon className="h-3 w-3 lg:h-4 lg:w-4 mr-2 text-yellow-400 animate-pulse" />
               <span>
                 © 2025 CODALWARE, Inc. All Rights Reserved
               </span>
@@ -191,7 +193,7 @@ export const Footer = () => {
                   <div key={link.name} className="flex items-center">
                     <a
                       href={link.href}
-                      className="text-gray-400 hover:text-yellow-400 transition-colors duration-200 text-xs lg:text-sm whitespace-nowrap"
+                      className="text-gray-400 hover:text-yellow-400 transition-colors duration-200 text-xs lg:text-sm whitespace-nowrap hover:underline decoration-yellow-400/50"
                     >
                       {link.name}
                     </a>
@@ -207,7 +209,7 @@ export const Footer = () => {
           {/* Mobile-only brand tagline */}
           <div className="text-center mt-4 lg:hidden">
             <p className="text-gray-500 text-xs">
-              Crafted with ❤️ for sneaker enthusiasts
+              Crafted with <span className="text-yellow-400 animate-pulse">❤️</span> for sneaker enthusiasts
             </p>
           </div>
         </div>

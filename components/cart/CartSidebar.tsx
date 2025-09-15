@@ -37,7 +37,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
   return (
     <>
       <div className="fixed right-4 top-4 bottom-4 w-96 bg-gradient-to-br from-slate-800 to-slate-900 shadow-2xl rounded-xl border border-slate-600/50 z-50 flex flex-col">
-      <div className="p-6 border-b border-slate-600 bg-gradient-to-r from-yellow-500/10 to-amber-500/10 rounded-t-xl flex-shrink-0">
+      <div className="p-6 border-b border-slate-600 bg-gradient-to-r from-yellow-500/10 to-blue-500/10 rounded-t-xl flex-shrink-0">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold text-white flex items-center gap-2">
@@ -52,7 +52,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
         </div>
       </div>
       
-      <div className="flex-1 overflow-y-auto px-6 py-4">
+      <div className="flex-1 bg-gradient-to-br from-slate-800 to-slate-900 shadow-2xl px-6 py-4">
         {items.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 h-full">
             <ShoppingBagIcon className="w-16 h-16 text-slate-500 mb-4" />
@@ -61,7 +61,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
         ) : (
           <div className="space-y-4">
             {items.map((item) => (
-              <div key={item.id} className="bg-slate-700/50 p-4 rounded-xl border border-slate-600/30 hover:border-yellow-500/40">
+              <div key={item.id} className="bg-slate-700/50 p-4 rounded-xl border border-slate-600/30 hover:border-yellow-500/40 transition-all duration-200">
                 <div className="flex items-start space-x-4">
                   <div className="w-16 h-16 bg-slate-600 rounded-lg overflow-hidden">
                     {item.imageUrl && (
@@ -111,7 +111,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
           <div className="space-y-3">
             <button 
               onClick={handleCheckout}
-              className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-4 px-6 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-xl active:scale-95 shadow-lg border border-emerald-500/20"
+              className="w-full bg-gradient-to-r from-yellow-600 to-blue-600 hover:from-yellow-500 hover:to-blue-500 text-white font-bold py-4 px-6 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-xl active:scale-95 shadow-lg border border-yellow-500/20"
             >
               <span className="mr-2">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
