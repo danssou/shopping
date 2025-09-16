@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { XMarkIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { signIn, signUp } from '@/lib/auth-client';
+import Email2FAModal from './Email2FAModal';
+import use2FA from '@/hooks/use2FA';
 
 interface SignInModalProps {
   isOpen: boolean;
@@ -22,6 +24,9 @@ export default function SignInModal({ isOpen, onClose, onSuccess, redirectTo, in
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [show2FAModal, setShow2FAModal] = useState(false);
+  const [pendingEmailFor2FA, setPendingEmailFor2FA] = useState('');
+  const { sendCode } = use2FA();
 
   // Reset form when modal opens/closes or mode changes
   useEffect(() => {
@@ -132,15 +137,17 @@ export default function SignInModal({ isOpen, onClose, onSuccess, redirectTo, in
         return;
       }
 
-      // Success! Close modal and handle redirect
-      onClose();
-      
-      if (onSuccess) {
-        onSuccess();
-      }
-      
-      if (redirectTo) {
-        window.location.href = redirectTo;
+      // Success! If 2FA is enabled via env, trigger 2FA flow; otherwise close and redirect
+      const enable2FA = process.env.NEXT_PUBLIC_ENABLE_2FA === 'true';
+
+      if (enable2FA) {
+        setPendingEmailFor2FA(email);
+        await sendCode(email);
+        setShow2FAModal(true);
+      } else {
+        onClose();
+        if (onSuccess) onSuccess();
+        if (redirectTo) window.location.href = redirectTo;
       }
     } catch (error) {
       console.error(`${mode} error:`, error);
@@ -334,6 +341,18 @@ export default function SignInModal({ isOpen, onClose, onSuccess, redirectTo, in
           </div>
         </div>
       </div>
+      {/* 2FA Modal (optional) */}
+      <Email2FAModal
+        isOpen={show2FAModal}
+        identifier={pendingEmailFor2FA}
+        onClose={() => setShow2FAModal(false)}
+        onVerified={() => {
+          setShow2FAModal(false);
+          onClose();
+          if (onSuccess) onSuccess();
+          if (redirectTo) window.location.href = redirectTo;
+        }}
+      />
     </div>
   );
 }
