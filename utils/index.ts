@@ -1,3 +1,11 @@
+
+
+// Env variables
+export { PORT, NODE_ENV, DATABASE_URL, GMAIL_APP_PASSWORD } from './config/env';
+
+
+// Nodemailer transporter
+export { default as transporter } from './config/nodemailer';
 // Re-export from utility modules
 export * from './formatters';
 export * from './validation';
@@ -43,6 +51,8 @@ export {
   formatDate,
   formatTime
 } from './helpers';
+
+// Slugify utility
 
 export const slugify = (text: string): string => {
   return text

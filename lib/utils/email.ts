@@ -1,3 +1,5 @@
+import { transporter as t } from '@/utils';
+import { accountEmail } from '@/utils/config/nodemailer';
 import nodemailer from 'nodemailer';
 
 type EmailOptions = {
@@ -7,24 +9,15 @@ type EmailOptions = {
   html?: string;
 };
 
+
+
 export async function sendEmail(opts: EmailOptions) {
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT || 587),
-    secure: process.env.SMTP_SECURE === 'true',
-    auth: process.env.SMTP_USER
-      ? {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
-        }
-      : undefined,
-  });
+  const transporter = t as nodemailer.Transporter;
 
   const message = {
-    from: process.env.SMTP_FROM || 'no-reply@example.com',
+    from: accountEmail,
     to: opts.to,
     subject: opts.subject,
-    text: opts.text,
     html: opts.html,
   };
 
